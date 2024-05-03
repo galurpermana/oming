@@ -8,7 +8,7 @@
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{ config('app.name', 'Foodie') }}</title>
+    <title>{{ config('app.name', 'Oming') }}</title>
 
     <!-- Scripts -->
     <script type="text/javascript" src="{{ asset('js/app.js') }}" defer></script>
@@ -23,6 +23,7 @@
 
     <!-- Icons -->
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    @vite(['resources/css/app.css','resources/js/app.js'])
 </head>
 
 <body>
@@ -30,8 +31,8 @@
         <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
             <div class="container">
                 <a class="navbar-brand font-bold text-xl" href="{{ url('/') }}">
-                    <!-- {{ config('app.name', 'Foodie') }} -->
-                    {{ __('Foodie') }}
+                    <!-- {{ config('app.name', 'Oming') }} -->
+                    Oming's Cakes
                 </a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
                     <span class="navbar-toggler-icon"></span>
@@ -102,8 +103,8 @@
                         </li>
 
                         @can('isAdmin')
-                            <li class="nav-item active relative">
-                                <a class="nav-link" href="{{ url('food/viewfood') }}">
+                            <li class="nav-item active relative rounded-md border-2">
+                                {{-- <a class="nav-link" href="{{ url('food/viewfood') }}">
                                     <div class="flex" id="navbtnviewfood" aria-describedby="tooltipviewfood" data-tooltip-text="View Food">
                                         <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                             <path stroke-linecap="round" stroke-linejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
@@ -112,8 +113,18 @@
                                         <div class="text-md mt-2 bg-gray-600 text-white absolute rounded bg-opacity-50 shadow-xl hidden top-8 py-1 px-2 whitespace-pre" id="tooltipviewfood">    
                                         </div>
                                         <span class="sr-only">
+                                        
                                     </div>
-                                </a>
+                                    
+                                </a> --}}
+                                <a class="nav-link flex items-center" href="{{ url('food/viewfood') }}">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                      </svg>
+                                    <span>Admin Dashboard</span>
+                                  </a>
+                                
                             </li>
                             <!-- disabled link for spacing -->
                             <li class="nav-item disabled">
@@ -125,8 +136,11 @@
                         <!-- Authentication Links -->
                         @guest
                         @if (Route::has('login'))
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ route('login') }}">{{ __('Login') }}</a>
+                        <li class="nav-item rounded-md border-2 ">
+                            
+                                <a class="nav-link" href="{{ route('login') }}">{{ __('Login') }}</a>
+                            
+                            
                         </li>
                         <!-- disabled link for spacing -->
                         <li class="nav-item disabled">
@@ -200,7 +214,24 @@
                     </div>
                 </div>
             </div>
+            
         </nav>
+        @if (Auth::check() && Auth::user()->isAdmin())
+        <ul class="flex justify-center mt-2">
+            
+            <li class="flex-1 m-2" >
+              <a href="{{ url('food/viewfood') }}" class="text-center block border border-2 mx-4 rounded hover:border-gray-200 text-blue-500 hover:bg-gray-200 py-2 px-4" href="#">Product List</a>
+            </li>
+            <li class="flex-1 m-2">
+                <a  class="text-center block border border-2 mx-4 rounded hover:border-gray-200 text-blue-500 hover:bg-gray-200 py-2 px-4" href="#">Order List</a>
+              </li>
+              <li class="flex-1 m-2">
+                <a href="{{ url('ingredient/ingredientslist') }}" class="text-center block border border-2 mx-4 rounded hover:border-gray-200 text-blue-500 hover:bg-gray-200 py-2 px-4" href="#">Ingredient List</a>
+              </li>
+            
+          </ul>
+          @endif
+        
 
         <main class="flex-grow py-4 h-full">
             @include('components.flash_message')
@@ -271,6 +302,8 @@
         })
 
     </script>
+    <script src="https://kit.fontawesome.com/56c2e8bc64.js" crossorigin="anonymous"></script>
+    @stack('script')
 </body>
 
 </html>

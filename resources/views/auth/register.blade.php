@@ -35,9 +35,9 @@
                             </div>
                         </div>
                         <div class="form-group row mb-6">
-                            <label for="address" class="col-md-4 col-form-label text-md-right">{{ __('Address') }}</label>
+                            <label for="address" class="col-md-4 col-form-label text-md-right">{{ __('Phone Number') }}</label>
                             <div class="col-md-6">
-                                <textarea id="address" class="resize-none form-control @error('address') is-invalid @enderror" name="address" value="{{ old('address') }}" required></textarea>
+                                <input id="phone" type="number" class=" form-control @error('phone') is-invalid @enderror" name="phone" value="{{ old('phone') }}" required autocomplete="phone"></input>
                                 @error('address')
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $message }}</strong>
@@ -64,12 +64,13 @@
                             </div>
                         </div>
                         <br>
-                        <div class="form-group row ">
-                            <div class="col-md-6 offset-md-4">
+                        <div class="row align-items-center">
+                            <div class="col-2 ">
                                 <button type="submit" class="btn btn-primary active">
                                     {{ __('Register') }}
                                 </button>
                             </div>
+                            <p class="col-10">Sudah punya akun?<a class="text-blue-700" href="{{ route('login') }}">Login</a></p>
                         </div>
                     </form>
                 </div>

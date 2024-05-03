@@ -5,13 +5,13 @@
                 <div class="flex-col flex-1 ">
                     <h2 class="text-xl font-bold">Foodie</h2>
 
-                    <div class="flex flex-row">
+                    {{-- <div class="flex flex-row">
                         <button class="mr-3 hover:text-blue-700">Store Locations</button>
                         <span class="text-center text-gray-700">&#8226;</span>
                         <button class="mx-3 hover:text-blue-700">About Us</button>
                         <span class="text-center text-gray-700">&#8226;</span>
                         <button class="ml-3 hover:text-blue-700">Contact Us</button>
-                    </div>
+                    </div> --}}
 
                     <table>
                         <tbody>
@@ -41,7 +41,7 @@
 
                 <div class="relative flex-1">
                     <div class="absolute right-0 bottom-0">
-                        <h1 class="text-sm text-right">@ 2022 Foodie Sdn. Bhd.</h1>
+                        {{-- <h1 class="text-sm text-right">@ 2022 Foodie Sdn. Bhd.</h1> --}}
                         
                         <div class="row my-1">
                             <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">

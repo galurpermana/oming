@@ -10,6 +10,7 @@ class Order extends Model
     use HasFactory;
 
     public $timestamps = false;
+    
 
     /**
 	 * The database table used by the model.

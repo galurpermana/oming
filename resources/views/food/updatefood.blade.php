@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.master')
 @section('content')
 <div class="flex flex-col items-center">
   <form action="/food/{{$food['id']}}" method="POST" class="w-50">

@@ -11,6 +11,8 @@ class Food extends Model
 
     public $timestamps = false;
 
+    protected $table = 'foods';
+
     // /**
 	//  * The database table used by the model.
 	//  *
@@ -23,15 +25,15 @@ class Food extends Model
      *
      * @var array<int, string>
      */
-    protected $fillable = [
-        'name',
-        'price',
-        'description',
-        'type',
-        'picture',
-    ];
+    protected $fillable = ['name', 'description', 'price', 'picture'];
 
     public function orders() {
         return $this->belongsToMany(Order::class)->withPivot('quantity');
+    }
+
+    public function ingredients()
+    {
+        return $this->belongsToMany(Ingredient::class, 'food_ingredients', 'food_id', 'ingredient_id')
+                    ->withPivot('quantity');
     }
 }

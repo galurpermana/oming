@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.master')
 
 @section('content')
 <h1 class="px-4 pt-1 pb-3 text-3xl font-bold">

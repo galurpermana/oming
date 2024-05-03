@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.master')
 
 <?php
 if (session('cart') == null) {
@@ -24,7 +24,7 @@ if (!empty(session('cart'))) {
         </div>
         <div class="flex-1 text-right text-2xl self-center">
             @if (!empty(session('cart')))
-            <span class="mr-8 "> Total: RM{{number_format((float)($total), 2, '.', '')}} </span>
+            <span class="mr-8 "> Total: Rp {{number_format((float)($total), 2, '.', '')}} </span>
             @endif
         </div>
     </div>
@@ -40,12 +40,12 @@ if (!empty(session('cart'))) {
             <div class="flex flex-col justify-between">
                 <div class="flex flex-col items-center bg-white rounded-lg border shadow-md md:flex-row md:max-w-full hover:bg-gray-100">
                     <div class="flex rounded-lg">
-                        <img class="flex h-28 w-44 object-fill rounded-lg" src="{{$food['picture']}}">
+                        <img class="flex h-28 w-44 object-fill rounded-lg" src="images/food/{{$food['picture']}}">
                     </div>
                     <div class="flex flex-col place-content-center px-4 py-3 leading-normal w-4/6">
                         <h5 class="flex mb-2 text-2xl font-bold tracking-tight text-gray-900"> {{$food['name']}} </h5>
                         <p class="flex font-normal text-gray-700"> Quantity: <b>&nbsp;{{$food['quantity']}}</b> </p>
-                        <p class="flex font-normal text-gray-700"> Price: <b>&nbsp;RM{{number_format((float)($food['price']*$food['quantity']), 2, '.', '')}} &ensp;</b> <span class="opacity-60"> [RM{{number_format((float)($food['price']), 2, '.', '')}} per unit] <span> </p>
+                        <p class="flex font-normal text-gray-700"> Price: <b>&nbsp;Rp {{number_format((float)($food['price']*$food['quantity']), 2, '.', '')}} &ensp;</b> <span class="opacity-60"> [Rp {{number_format((float)($food['price']), 2, '.', '')}} per unit] <span> </p>
                     </div>
                     <div class="flex justify-center leading-normal w-1/6">
                         <button onclick="remove_form_action({{$food['id']}})" type="button" class="openRemoveModal text-red-700 font-semibold bg-inherit border-red-500 rounded hover:text-white hover:bg-red-500 hover:border-transparent py-1 px-3 border-2">
@@ -59,6 +59,7 @@ if (!empty(session('cart'))) {
 </div>
 @endforeach
 
+
 <div class="flex justify-center">
     <button type="button" class="openOrderModal shadow leading-tight bg-green-600 text-white text-xl font-semibold rounded-lg m-4 px-12 py-3 text-sm focus:outline-none focus:border-white">
         Place Order
@@ -69,6 +70,29 @@ if (!empty(session('cart'))) {
     Your cart is empty.
 </p>
 @endif
+<div class="px-3 py-2">
+    <div class="flex flex-row px-4 py-3 leading-normal border shadow-md hover:bg-gray-100">
+        <div class="w-full">
+            <div class="flex flex-col justify-between">
+                <div class="flex flex-col items-center bg-white rounded-lg border shadow-md md:flex-row md:max-w-full hover:bg-gray-100">
+                    <div class="flex rounded-lg">
+                        <img class="flex h-28 w-44 object-fill rounded-lg" src="{{asset('images/food/20240322053948.png')}}">
+                    </div>
+                    <div class="flex flex-col place-content-center px-4 py-3 leading-normal w-4/6">
+                        <h5 class="flex mb-2 text-2xl font-bold tracking-tight text-gray-900"> RISOLES </h5>
+                        <p class="flex font-normal text-gray-700"> Quantity: <b>&nbsp;2</b> </p>
+                        <p class="flex font-normal text-gray-700"> Price: <b>&nbsp;Rp 40000 &ensp;</b> <span class="opacity-60"> Rp 20000 per unit <span> </p>
+                    </div>
+                    <div class="flex justify-center leading-normal w-1/6">
+                        <button  type="button" class="openRemoveModal text-red-700 font-semibold bg-inherit border-red-500 rounded hover:text-white hover:bg-red-500 hover:border-transparent py-1 px-3 border-2">
+                            <span> Remove </span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
 <!-- Remove item modal -->
 <div class="invisible flex h-screen overflow-y-auto overflow-x-hidden fixed right-0 left-0 top-4 z-50 justify-center items-center md:inset-0 h-modal sm:h-full" id="remove-modal">

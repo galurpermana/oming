@@ -5,7 +5,7 @@ if (session('cart') == null) {
 }
 ?>
 
-@extends('layouts.app')
+@extends('layouts.master')
 
 @section('content')
 
@@ -18,7 +18,7 @@ if (session('cart') == null) {
 
 <div class="mx-8">
     <div class="flex flex-row">
-        <div class="flex flex-row space-x-4 flex-grow">
+        {{-- <div class="flex flex-row space-x-4 flex-grow">
             <span class="font-weight-bold sort-font my-auto"> Filter By :</span>
             <div class="py-1 px-3 border-solid border-1 border-slate-300 rounded-xl text-center bg-white">
                 <a href="/home" class="sort-font">All</a>
@@ -32,7 +32,7 @@ if (session('cart') == null) {
             <div class="py-1 px-3 border-solid border-1 border-slate-300 rounded-xl text-center bg-white">
                 <a href="../home/Japanese" class="sort-font">Japanese</a>
             </div>
-        </div>
+        </div> --}}
         <div class="flex flex-row space-x-4 flex-grow justify-end">
             <span class="font-weight-bold sort-font my-auto"> Order By :</span>
             <div class="py-1 px-3 border-solid border-1 border-slate-300 rounded-xl text-center bg-white">
@@ -49,16 +49,28 @@ if (session('cart') == null) {
     @foreach($foods as $data)
     <div class="rounded-md overflow-hidden shadow-md border-1 border-gray-100">
         <a href="../food/{{$data['id']}}">
-            <img class="h-48 w-full object-cover" src="{{$data['picture']}}" alt="Mountain">
+            <img class="h-48 w-full object-cover" src="{{ Storage::url($data['picture'])}}" alt="Mountain">
             <div class="p-4">
                 <div class="font-bold text-xl mb-2">{{$data['name']}}</div>
                 <p class="text-gray-700 text-base">
-                    RM {{$data['price']}}
+                    Rp {{$data['price']}}
                 </p>
             </div>
         </a>
     </div>
+    
     @endforeach
+    {{-- <div class="rounded-md overflow-hidden shadow-md border-1 border-gray-100">
+        <a href="#">
+            <img class="h-48 w-full object-cover" src="{{asset('images/food/20240322053948.png')}}" alt="Mountain">
+            <div class="p-4">
+                <div class="font-bold text-xl mb-2">RISOLES</div>
+                <p class="text-gray-700 text-base">
+                    Rp 20000
+                </p>
+            </div>
+        </a>
+    </div> --}}
 </div>
 
 <div class="p-5">

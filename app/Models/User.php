@@ -23,10 +23,15 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
-        'address',
+        'phone',
     ];
 
     protected $guard = 'isAdmin';
+
+    public function isAdmin()
+    {
+        return $this->isAdmin == '1'; // Assuming 'role' is a column in your users table that determines user roles
+    }
 
     /**
      * The attributes that should be hidden for serialization.

@@ -51,9 +51,8 @@ class RegisterController extends Controller
             // 'password' => ['required', 'string', 'min:6', 'confirmed'],
             'password' => ['required', 
             'min:6', 
-            'regex:/^.*(?=.{3,})(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[\d\x])(?=.*[!$#%]).*$/', 
             'confirmed'],
-            'address' => ['required', 'string'],
+            'phone' => ['required', 'string'],
         ]);
     }
     /**
@@ -66,7 +65,7 @@ class RegisterController extends Controller
             'name' => $data['name'],
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
-            'address' => $data['address'],
+            'phone' => $data['phone'],
         ]);
     }
     /**

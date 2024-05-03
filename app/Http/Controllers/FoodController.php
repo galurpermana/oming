@@ -3,12 +3,16 @@
 namespace App\Http\Controllers;
 
 use App\Models\Food;
+use App\Models\FoodIngredient;
+use App\Models\Ingredient;
 use App\Models\Order;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\Validator;
 
 class FoodController extends Controller
 {
@@ -81,18 +85,61 @@ class FoodController extends Controller
         return redirect('/food/viewfood');
     }
 
-    public function create(Request $food)
+    public function create(Request $request)
     {
-        $food->validate([
-            'name' => 'required | unique:food',
-            'description' => 'required',
-            'price' => 'required',
-            'type' => 'required',
-            'picture' => 'required'
-        ]);
-        Food::create($food->all());
-        return redirect('/food/viewfood');
+        $ingredients = Ingredient::all(); 
+        return view('food.addfood', ['ingredients' => $ingredients]);
     }
+
+
+    public function store(Request $request)
+    {
+        // Validate incoming request
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|string|max:255',
+            'description' => 'required|string',
+            'price' => 'required|numeric',
+            'picture' => 'required|image|max:2048', // Assuming you're storing images in the storage
+            'ingredients.*.type' => 'required|exists:ingredients,id',
+            'ingredients.*.quantity' => 'required|numeric|min:1',
+            'ingredients.*.unit' => 'required|string|max:255',
+        ]);
+    
+        // Check if validation fails
+        if ($validator->fails()) {
+            return redirect()->back()
+                ->withErrors($validator) // Pass validation errors to the view
+                ->withInput(); // Pass the input data back to the form
+        }
+        // dd($validator);
+    
+        // Upload the image
+        $imagePath = $request->file('picture')->store('public/foods');
+    
+        // Create food
+        $food = Food::create([
+            'name' => $request->name,
+            'description' => $request->description,
+            'price' => $request->price,
+            'picture' => $imagePath,
+        ]);
+    
+        // Attach ingredients to the food
+        foreach ($request->ingredients as $ingredient) {
+            FoodIngredient::create([
+                'food_id' => $food->id,
+                'ingredient_id' => $ingredient['type'],
+                'quantity' => $ingredient['quantity'],
+                'unit' => $ingredient['unit'],
+            ]);
+        }
+    
+        // Redirect back or do whatever you want
+        return redirect()->back()->with('success', 'Food created successfully!');
+    }
+    
+
+    
 
     public function update(Request $food, $id)
     {
@@ -115,4 +162,29 @@ class FoodController extends Controller
         ]);
         return redirect('/food/viewfood');
     }
+
+    
+    // public function showFoodCost($foodId)
+    // {
+    //     // Retrieve the food and its associated ingredients
+        
+    //     $foodIngredients = FoodIngredient::where('food_id', $foodId)->get();
+    //     // dd($foodIngredients);
+
+    //     // Calculate total cost for each ingredient
+    //     $totalCost = 0;
+    //     foreach ($foodIngredients as $foodIngredient) {
+    //         $ingredient = $foodIngredient->ingredient;
+    //         $ingredientCost = $ingredient->harga_bahan * $foodIngredient->quantity;
+    //         $totalCost += $ingredientCost;
+    //     }
+
+    //     return view('food.viewfood', [
+            
+    //         'totalCost' => $totalCost,
+    //         'foodIngredients' => $foodIngredients
+    //     ]);
+    // }
+
+   
 }
