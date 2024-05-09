@@ -93,25 +93,31 @@ class FoodController extends Controller
 
 
     public function store(Request $request)
+
     {
+         
+    //    dd($request->all());
         // Validate incoming request
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
             'description' => 'required|string',
             'price' => 'required|numeric',
-            'picture' => 'required|image|max:2048', // Assuming you're storing images in the storage
-            'ingredients.*.type' => 'required|exists:ingredients,id',
+            'picture' => 'required|image|max:2048', 
+            // 'ingredients.*.type' => 'required',
             'ingredients.*.quantity' => 'required|numeric|min:1',
             'ingredients.*.unit' => 'required|string|max:255',
         ]);
-    
+        
+   
         // Check if validation fails
         if ($validator->fails()) {
             return redirect()->back()
                 ->withErrors($validator) // Pass validation errors to the view
                 ->withInput(); // Pass the input data back to the form
+                
+                
         }
-        // dd($validator);
+       
     
         // Upload the image
         $imagePath = $request->file('picture')->store('public/foods');
@@ -123,7 +129,9 @@ class FoodController extends Controller
             'price' => $request->price,
             'picture' => $imagePath,
         ]);
+        
     
+        
         // Attach ingredients to the food
         foreach ($request->ingredients as $ingredient) {
             FoodIngredient::create([
@@ -133,9 +141,11 @@ class FoodController extends Controller
                 'unit' => $ingredient['unit'],
             ]);
         }
+        // dd($food->fresh()->load('ingredients'));
     
         // Redirect back or do whatever you want
-        return redirect()->back()->with('success', 'Food created successfully!');
+        return redirect('food/viewfood')->with('success', 'Food created successfully!');
+
     }
     
 

@@ -2,12 +2,12 @@
 @section('content')
 <div class="flex flex-col items-center">
 
-    <form action="{{ url('/ingredient') }}" method="POST" class="w-50">
+    <form action="{{ url('/ingredient') }}" method="POST" class="w-1/2">
 
       @csrf
       <div class="shadow sm:rounded-md sm:overflow-hidden">
         
-        <div class="px-4 py-5 bg-white space-y-6 sm:p-6">
+        <div class="px-4 py-5 w-100 bg-white space-y-6 sm:p-6">
           <div class="flex justify-center w-max">
             <h1 class="text-lg">Add Ingredients</h1>
           </div>
@@ -27,13 +27,14 @@
 
           <div>
             <label for="ingredient-price" class="block text-lg font-medium text-gray-700"> Price </label>
-            <div class="mt-1">
-              <input required type="number" name="harga_bahan" id="ingredient-price" class="shadow-sm @error('harga_bahan') is-invalid @enderror p-1 border focus:ring-indigo-500 focus:border-indigo-500 flex-1 block w-full rounded-md sm:text-lg border-gray-300" placeholder="20000">
+            <div class="mt-1 row">
+              <input required type="number" name="harga_bahan" id="ingredient-price" class="col-6 shadow-sm @error('harga_bahan') is-invalid @enderror p-1 border focus:ring-indigo-500 focus:border-indigo-500 flex-1 block w-full rounded-md sm:text-lg border-gray-300" placeholder="20000">
               @error('harga_bahan')
                 <span class="invalid-feedback" role="alert">
                     <strong>{{ $message }}</strong>
                 </span>
               @enderror
+              <input type="text" value="/" disabled class="col-1 ">
             </div>
           </div>
   
@@ -81,7 +82,7 @@
 @endsection
 
 @push('script')
-<script>
+{{-- <script>
   function addIngredient() {
     // Clone the ingredient row
     var ingredientRow = document.querySelector('.ingredient-row').cloneNode(true);
@@ -134,5 +135,5 @@
       });
     }
   }
-</script>
+</script> --}}
 @endpush

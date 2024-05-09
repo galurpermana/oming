@@ -1,16 +1,17 @@
 @extends('layouts.master')
 @section('content')
-<div class="flex flex-col items-center">
+<div class="flex flex-col items-center ">
       @if ($errors->any())
-        <div class="alert alert-danger">
+        <div class="p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400">
             <ul>
                 @foreach ($errors->all() as $error)
                     <li>{{ $error }}</li>
+                    
                 @endforeach
             </ul>
         </div>
     @endif
-  <form action="{{ route('food.store') }}" method="POST" enctype="multipart/form-data" class="w-50">
+  <form action="{{ route('food.store') }}" method="POST" enctype="multipart/form-data" class="w-1/2">
     @csrf
     <div class="shadow sm:rounded-md sm:overflow-hidden">
       <div class="px-4 py-5 bg-white space-y-6 sm:p-6">
@@ -43,9 +44,9 @@
           </div>
         </div>
 
-        <div class="row">
-          <label for="price" class="block text-lg font-medium text-gray-700"> Food Price </label>
-          <div class="mt-1 col flex flex-col rounded-md">
+        <div class="grid grid-cols-3 gap-2">
+          <label for="price" class="block col-span-4 text-lg font-medium text-gray-700"> Food Price </label>
+          <div class="mt-1 col-span-4 flex flex-col rounded-md">
               <input required type="number" name="price" id="price" class="shadow-sm @error('price') is-invalid @enderror p-1 border focus:ring-indigo-500 focus:border-indigo-500 flex-1 block w-full rounded-md sm:text-lg border-gray-300" placeholder="20000">
               @error('price')
               <span class="invalid-feedback" role="alert">
@@ -55,26 +56,26 @@
           </div>
         </div>
 
-        <div class="row">
-          <div class="repeatable" id="ingredient-section">
-            <label for="ingredients" class="block text-lg font-medium text-gray-700">Ingredient</label>
+        {{-- <div class="row">
+          <div class="repeatable " id="ingredient-section">
             @foreach(old('ingredients', [[]]) as $index => $ingredientData)
+            <label for="ingredients" class="block text-lg  font-medium text-gray-700">Ingredient</label>
             
-            <div class="ingredient-row">
-              <div class="row">
-                <div class="col-md-5">
-                  <select name="ingredients[{{ $index }}][type]" class="ingredient-select flex justify-center mt-1 flex rounded-md shadow-sm p-1 border focus:ring-indigo-500 focus:border-indigo-500 flex-1 block w-full rounded-md sm:text-lg border-gray-300">
-                    
+            
+            <div class="ingredient-row mt-1">
+              <div class="grid grid-cols-7 gap-2 md:grid-cols-2 sm:grid-cols-1">
+                <div class="">
+                  <select name="ingredients[{{ $index  }}][type]" class="col-span-3 md:col-span-2 mt-1 ingredient-select rounded-md shadow-sm p-1 border focus:ring-indigo-500 focus:border-indigo-500  block w-full rounded-md sm:text-lg border-gray-300">
                     @foreach($ingredients as $ingredientOption)
                       <option value="{{ $ingredientOption->id }}">{{ $ingredientOption->name }}</option>
                     @endforeach
                   </select>
                 </div>
-                <div class="col-md-3">
-                  <input type="number" name="ingredients[{{ $index }}][quantity]" placeholder="amount" class="shadow-sm p-1 border focus:ring-indigo-500 focus:border-indigo-500 flex-1 block w-full rounded-md sm:text-lg border-gray-300">
+                <div class="col-span-1 ">
+                  <input type="number" name="ingredients[{{ $index }}][quantity]" placeholder="amount" class="mt-1 flex-none shadow-sm  p-1 border focus:ring-indigo-500 focus:border-indigo-500 flex-1 block w-full rounded-md sm:text-lg border-gray-300">
                 </div>
-                <div class="col-md-3">
-                  <select required name="ingredients[{{ $index }}][unit]" id="ingredient-unit" class="shadow-sm @error('unit') is-invalid @enderror p-1 border focus:ring-indigo-500 focus:border-indigo-500 flex-1 block w-full rounded-md sm:text-lg border-gray-300">
+                <div class="col-md-3 col-span-2">
+                  <select required name="ingredients[{{ $index }}][unit]" id="ingredient-unit" class="mt-1 shadow-sm @error('unit') is-invalid @enderror p-1 border focus:ring-indigo-500 focus:border-indigo-500 flex-1 block w-full rounded-md sm:text-lg border-gray-300">
                     
                     <option value="Gram">Gram</option>
                     <option value="Kilogram">Kilogram</option>
@@ -87,8 +88,8 @@
                 </span>
               @enderror
                 </div>
-                <div class="col-md-1">
-                  <button type="button" class="btn btn-danger active" onclick="removeIngredient(this)"><i class="fa-solid fa-trash"></i></button>
+                <div class="col-md-1 col-span-7">
+                  <button type="button" class="w-full focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900" onclick="removeIngredient(this)"><i class="fa-solid fa-trash"></i></button>
                 </div>
               </div>
             </div>
@@ -96,11 +97,51 @@
             
             
           </div>
-        </div>
+        </div> --}}
+        <div class="row">
+          <div class="repeatable" id="ingredient-section">
+              @foreach(old('ingredients', [[]]) as $index => $ingredientData)
+              <label for="ingredients_{{ $index }}" class="block text-lg font-medium text-gray-700">Ingredient</label>
+      
+              <div class="ingredient-row mt-1">
+                  <div class="grid grid-cols-1 gap-2 md:grid-cols-2 lg:grid-cols-7">
+                      <div class="flex lg:col-span-3">
+                          <select id="ingredients_{{ $index }}" name="ingredients[{{ $index  }}][type]" class="col-span-3 md:col-span-2 mt-1 ingredient-select rounded-md shadow-sm p-1 border focus:ring-indigo-500 focus:border-indigo-500  block w-full rounded-md sm:text-lg border-gray-300">
+                              @foreach($ingredients as $ingredientOption)
+                              <option value="{{ $ingredientOption->id }}">{{ $ingredientOption->name }}</option>
+                              @endforeach
+                          </select>
+                      </div>
+                      <div class="lg:col-span-2 md:col-span-1 flex">
+                          <input type="number" name="ingredients[{{ $index }}][quantity]" placeholder="amount" class="mt-1 flex-none shadow-sm  p-1 border focus:ring-indigo-500 focus:border-indigo-500 flex-1 block w-full rounded-md sm:text-lg border-gray-300">
+                      </div>
+                      <div class="lg:col-span-2 md:col-span-1">
+                          <select required name="ingredients[{{ $index }}][unit]" id="ingredient-unit_{{ $index }}" class="mt-1 shadow-sm @error('unit') is-invalid @enderror p-1 border focus:ring-indigo-500 focus:border-indigo-500 flex-1 block w-full rounded-md sm:text-lg border-gray-300">
+      
+                              <option value="Gram">Gram</option>
+                              <option value="Kilogram">Kilogram</option>
+                              <option value="Liter">Liter</option>
+                              <!-- Add more options as needed -->
+                          </select>
+                          @error('unit')
+                          <span class="invalid-feedback" role="alert">
+                              <strong>{{ $message }}</strong>
+                          </span>
+                          @enderror
+                      </div>
+                      <div class="col-md-1 col-span-7">
+                          <button type="button" class="w-full focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900" onclick="removeIngredient(this)"><i class="fa-solid fa-trash"></i></button>
+                      </div>
+                  </div>
+              </div>
+              @endforeach
+          </div>
+      </div>
+      
 
         <!-- Add Ingredient Button -->
-        <div class="mt-3">
-          <button type="button" class="btn btn-primary active" onclick="addIngredient()">Add Ingredient</button>
+        <div class=" flex flex-row-reverse ">
+          <button type="button" class="focus:outline-none text-white bg-purple-700 hover:bg-purple-800 focus:ring-4 focus:ring-purple-300 font-medium rounded-lg text-sm px-5 py-2.5 mb-2 dark:bg-purple-600 dark:hover:bg-purple-700 dark:focus:ring-purple-900" onclick="addIngredient()">Add Ingredient</button>
         </div>
 
         <div class="mt-3">
@@ -129,33 +170,51 @@
 @push('script')
 <script>
 function addIngredient() {
-    // Clone the ingredient row
-    var ingredientRow = document.querySelector('.ingredient-row').cloneNode(true);
+  var ingredientRow = document.querySelector('.ingredient-row').cloneNode(true);
 
-    // Clear the values
-    var selectElement = ingredientRow.querySelector('select');
-    var inputElement = ingredientRow.querySelector('input[type="number"]');
-    selectElement.selectedIndex = 0;
-    inputElement.value = '';
+// Clear the values
+var selectElement = ingredientRow.querySelector('select');
+var inputElement = ingredientRow.querySelector('input[type="number"]');
+selectElement.selectedIndex = 0;
+inputElement.value = '';
 
-    // Append the cloned row to the ingredient section
-    document.getElementById('ingredient-section').appendChild(ingredientRow);
+// Append the cloned row to the ingredient section
+document.getElementById('ingredient-section').appendChild(ingredientRow);
 
-    // Update the name attribute of select and input fields with unique indices
-    var ingredientRows = document.querySelectorAll('.ingredient-row');
-    ingredientRows.forEach(function(row, index) {
-        var select = row.querySelector('select');
-        var input = row.querySelector('input[type="number"]');
-        select.name = 'ingredients[' + index + '][type]';
-        input.name = 'ingredients[' + index + '][quantity]';
-        // Update the name for the unit dropdown
-        var unitSelect = row.querySelector('select#ingredient-unit');
-        unitSelect.name = 'ingredients[' + index + '][unit]';
-    });
+// Update the name attribute of select and input fields with unique indices
+var ingredientRows = document.querySelectorAll('.ingredient-row');
+ingredientRows.forEach(function(row, index) {
+    var select = row.querySelector('select');
+    var input = row.querySelector('input[type="number"]');
+    select.name = 'ingredients[' + index + '][type]';
+    input.name = 'ingredients[' + index + '][quantity]';
+    // Update the name for the unit dropdown
+    var unitSelect = row.querySelector('select#ingredient-unit');
+    unitSelect.name = 'ingredients[' + index + '][unit]';
+});
+
+// Update the remove buttons state
+updateRemoveButtons();
+}
+function removeIngredient(button) {
+    // Get the ingredient row
+    var ingredientRow = button.closest('.ingredient-row');
+
+    // Check if there's only one row remaining
+    if (document.querySelectorAll('.ingredient-row').length === 1) {
+      // If there's only one row remaining, clear its values instead of removing it
+      var selectElement = ingredientRow.querySelector('select');
+      var inputElement = ingredientRow.querySelector('input[type="number"]');
+      selectElement.selectedIndex = 0;
+      inputElement.value = '';
+    } else {
+      // If there's more than one row, remove the ingredient row
+      ingredientRow.remove();
+    }
 
     // Update the remove buttons state
     updateRemoveButtons();
-}
+  }
 
 
 //   $(document).ready(function() {

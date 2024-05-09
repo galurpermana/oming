@@ -40,7 +40,8 @@ if (!empty(session('cart'))) {
             <div class="flex flex-col justify-between">
                 <div class="flex flex-col items-center bg-white rounded-lg border shadow-md md:flex-row md:max-w-full hover:bg-gray-100">
                     <div class="flex rounded-lg">
-                        <img class="flex h-28 w-44 object-fill rounded-lg" src="images/food/{{$food['picture']}}">
+                        <img class="flex h-28 w-44 object-fill rounded-lg" src="{{ Storage::url($food['picture'])}}">
+                        
                     </div>
                     <div class="flex flex-col place-content-center px-4 py-3 leading-normal w-4/6">
                         <h5 class="flex mb-2 text-2xl font-bold tracking-tight text-gray-900"> {{$food['name']}} </h5>

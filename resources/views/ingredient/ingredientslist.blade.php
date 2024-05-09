@@ -14,7 +14,7 @@
                     
                     <div class="col-6 self-end pb-2">
                         
-                        <button onclick="location.href='/ingredient?ingredientslist'" style="font-size:20px" class="flex py-2 px-4 border border-transparent shadow-sm text-lg 
+                        <button onclick="location.href='{{ route('ingredients.create')}}'" style="font-size:20px" class="flex py-2 px-4 border border-transparent shadow-sm text-lg 
                         font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Add <i class="material-icons self-center">add</i></button>
                     </div>
                     

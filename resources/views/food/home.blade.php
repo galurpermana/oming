@@ -45,9 +45,9 @@ if (session('cart') == null) {
     </div>
 </div>
 
-<div class="p-10 grid grid-cols-1 sm:grid-cols-1 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-4 gap-5">
+<div class="p-10 grid grid-cols-1 sm:grid-cols-1 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-4 gap-5 ">
     @foreach($foods as $data)
-    <div class="rounded-md overflow-hidden shadow-md border-1 border-gray-100">
+    <div class="rounded-md overflow-hidden shadow-md border-2 border-blue-200 hover:scale-105">
         <a href="../food/{{$data['id']}}">
             <img class="h-48 w-full object-cover" src="{{ Storage::url($data['picture'])}}" alt="Mountain">
             <div class="p-4">

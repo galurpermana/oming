@@ -1,5 +1,5 @@
 @if ($message = Session::get('success'))
-    <div class="alert alert-success alert-block mx-2">
+    <div class="p-4 mb-4 text-sm text-green-800 rounded-lg bg-green-50 dark:bg-gray-800 dark:text-green-400">
         <div class="flex mx-3">
             <div class="self-center">
                 <strong>{{ $message }}</strong>
@@ -14,7 +14,7 @@
 
 
 @if ($message = Session::get('error'))
-    <div class="alert alert-danger alert-block mx-2">
+    <div class="p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400">
         <div class="flex mx-3">
             <div class="self-center">
                 <strong>{{ $message }}</strong>
