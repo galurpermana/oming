@@ -11,7 +11,7 @@
             </ul>
         </div>
     @endif
-  <form action="{{ route('food.store') }}" method="POST" enctype="multipart/form-data" class="w-1/2">
+  <form action="{{ route('food.store') }}" method="POST" enctype="multipart/form-data" class="md:w-1/2 w-full">
     @csrf
     <div class="shadow sm:rounded-md sm:overflow-hidden">
       <div class="px-4 py-5 bg-white space-y-6 sm:p-6">
@@ -104,39 +104,41 @@
               <label for="ingredients_{{ $index }}" class="block text-lg font-medium text-gray-700">Ingredient</label>
       
               <div class="ingredient-row mt-1">
-                  <div class="grid grid-cols-1 gap-2 md:grid-cols-2 lg:grid-cols-7">
-                      <div class="flex lg:col-span-3">
-                          <select id="ingredients_{{ $index }}" name="ingredients[{{ $index  }}][type]" class="col-span-3 md:col-span-2 mt-1 ingredient-select rounded-md shadow-sm p-1 border focus:ring-indigo-500 focus:border-indigo-500  block w-full rounded-md sm:text-lg border-gray-300">
-                              @foreach($ingredients as $ingredientOption)
+                <div class="grid grid-cols-1 gap-2 md:grid-cols-3 lg:grid-cols-7">
+                  <div class="flex-none col-span-1 md:col-span-3 lg:col-span-3 ">
+                      <select id="ingredients_{{ $index }}" name="ingredients[{{ $index  }}][type]" class="col-span-3 md:col-span-2 mt-1 ingredient-select rounded-md shadow-sm p-1 border focus:ring-indigo-500 focus:border-indigo-500  block w-full rounded-md sm:text-lg border-gray-300">
+                          @foreach($ingredients as $ingredientOption)
                               <option value="{{ $ingredientOption->id }}">{{ $ingredientOption->name }}</option>
-                              @endforeach
-                          </select>
-                      </div>
-                      <div class="lg:col-span-2 md:col-span-1 flex">
-                          <input type="number" name="ingredients[{{ $index }}][quantity]" placeholder="amount" class="mt-1 flex-none shadow-sm  p-1 border focus:ring-indigo-500 focus:border-indigo-500 flex-1 block w-full rounded-md sm:text-lg border-gray-300">
-                      </div>
-                      <div class="lg:col-span-2 md:col-span-1">
-                          <select required name="ingredients[{{ $index }}][unit]" id="ingredient-unit_{{ $index }}" class="mt-1 shadow-sm @error('unit') is-invalid @enderror p-1 border focus:ring-indigo-500 focus:border-indigo-500 flex-1 block w-full rounded-md sm:text-lg border-gray-300">
-      
-                              <option value="Gram">Gram</option>
-                              <option value="Kilogram">Kilogram</option>
-                              <option value="Liter">Liter</option>
-                              <!-- Add more options as needed -->
-                          </select>
-                          @error('unit')
+                          @endforeach
+                      </select>
+                  </div>
+                  <div class="md:col-span-3 lg:col-span-2 md:flex sm:flex-col">
+                      <input type="number" name="ingredients[{{ $index }}][quantity]" placeholder="amount" class="mt-1 flex-none shadow-sm  p-1 border focus:ring-indigo-500 focus:border-indigo-500 flex-1 block w-full rounded-md sm:text-lg border-gray-300">
+                  </div>
+                  <div class="md:col-span-3 lg:col-span-2 md:flex sm:flex-col sm:col-span-1">
+                      <select required name="ingredients[{{ $index }}][unit]" id="ingredient-unit_{{ $index }}" class="mt-1 shadow-sm @error('unit') is-invalid @enderror p-1 border focus:ring-indigo-500 focus:border-indigo-500 flex-1 block w-full rounded-md sm:text-lg border-gray-300">
+                          <option value="Gram">Gram</option>
+                          <option value="Kilogram">Kilogram</option>
+                          <option value="Liter">Liter</option>
+                          <!-- Add more options as needed -->
+                      </select>
+                      @error('unit')
                           <span class="invalid-feedback" role="alert">
                               <strong>{{ $message }}</strong>
                           </span>
-                          @enderror
-                      </div>
-                      <div class="col-md-1 col-span-7">
-                          <button type="button" class="w-full focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900" onclick="removeIngredient(this)"><i class="fa-solid fa-trash"></i></button>
-                      </div>
+                      @enderror
                   </div>
+                  <div class="md:col-span-3 lg:col-span-7 col-span-1">
+                      <button type="button" class="w-full focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900" onclick="removeIngredient(this)"><i class="fa-solid fa-trash"></i></button>
+                  </div>
+              </div>
+              
+              
+              
               </div>
               @endforeach
           </div>
-      </div>
+        </div>
       
 
         <!-- Add Ingredient Button -->
@@ -172,26 +174,33 @@
 function addIngredient() {
   var ingredientRow = document.querySelector('.ingredient-row').cloneNode(true);
 
-// Clear the values
-var selectElement = ingredientRow.querySelector('select');
-var inputElement = ingredientRow.querySelector('input[type="number"]');
-selectElement.selectedIndex = 0;
-inputElement.value = '';
+  // Clear the values
+  var selectElement = ingredientRow.querySelector('select');
+  var inputElement = ingredientRow.querySelector('input[type="number"]');
+  selectElement.selectedIndex = 0;
+  inputElement.value = '';
 
-// Append the cloned row to the ingredient section
-document.getElementById('ingredient-section').appendChild(ingredientRow);
+  // Append the cloned row to the ingredient section
+  document.getElementById('ingredient-section').appendChild(ingredientRow);
 
-// Update the name attribute of select and input fields with unique indices
-var ingredientRows = document.querySelectorAll('.ingredient-row');
-ingredientRows.forEach(function(row, index) {
-    var select = row.querySelector('select');
+  // Update the name attribute of select and input fields with unique indices
+  var ingredientRows = document.querySelectorAll('.ingredient-row');
+  ingredientRows.forEach(function(row, index) {
+    // var select = row.querySelector('select');
     var input = row.querySelector('input[type="number"]');
-    select.name = 'ingredients[' + index + '][type]';
+    // select.name = 'ingredients[' + index + '][type]';
     input.name = 'ingredients[' + index + '][quantity]';
-    // Update the name for the unit dropdown
-    var unitSelect = row.querySelector('select#ingredient-unit');
+
+    // Update the name for the type select dropdown within each ingredient row
+    var typeSelect = row.querySelector('select[name^="ingredients["][name$="[type]"]');
+    typeSelect.name = 'ingredients[' + index + '][type]';
+
+    // Update the name for the unit select dropdown within each ingredient row
+    var unitSelect = row.querySelector('select[name^="ingredients["][name$="[unit]"]');
     unitSelect.name = 'ingredients[' + index + '][unit]';
-});
+  });
+
+
 
 // Update the remove buttons state
 updateRemoveButtons();
@@ -217,22 +226,7 @@ function removeIngredient(button) {
   }
 
 
-//   $(document).ready(function() {
-//     $.ajax({
-//         url: '/food/addfood', // URL to fetch ingredients data
-//         type: 'GET',
-//         dataType: 'json',
-//         success: function(response) {
-//             // Loop through the ingredients data and append options to the select element
-//             response.forEach(function(ingredient) {
-//                 $('.ingredient-select').append('<option value="' + ingredient.id + '">' + ingredient.name + '</option>');
-//             });
-//         },
-//         error: function(xhr, status, error) {
-//             console.error(xhr.responseText);
-//         }
-//     });
-// });
+
 
 </script>
 @endpush

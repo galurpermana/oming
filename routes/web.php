@@ -9,14 +9,14 @@ use App\Http\Controllers\OrderController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 
-Route::get('/', [FoodController::class, 'index']);
+
 Auth::routes();
 
 Route::get('logout', [LoginController::class, 'logout']);
 
 // food routes with policy
 Route::get('/updatefood/{food}', [FoodController::class, 'getForUpdate'])->middleware('protected');
-Route::get('/home', [FoodController::class, 'index']);
+Route::get('/', [FoodController::class, 'index']);
 Route::get('/home/{type}', [FoodController::class, 'filter']);
 Route::get('/food/viewfood', [FoodController::class, 'adminIndex'])->middleware('protected')->name('readfood');
 Route::view('/food/addfood', 'food.addfood')->middleware('protected');
@@ -24,7 +24,8 @@ Route::view('/food/addfood', 'food.addfood')->middleware('protected');
 // Route::get('/foods/create', [FoodController::class, 'create'])->name('foods.create');
 // Route::post('/foods', [FoodController::class, 'store'])->name('foods.store');
 Route::get('/food/{food}', [FoodController::class, 'show']);
-Route::post('/food/{food}', [FoodController::class, 'update']);
+Route::put('/food/{food}', [FoodController::class, 'update'])->name('food.update');
+Route::get('/food/{food}/edit', [FoodController::class, 'edit'])->name('food.edit');
 Route::delete('/food/{food}', [FoodController::class, 'destroy']);
 Route::post('/food', [FoodController::class, 'store'])->name('food.store');
 Route::get('/food/addfood', [FoodController::class, 'create'])->name('food.create');

@@ -2,7 +2,7 @@
 @section('content')
 <div class="flex flex-col items-center">
 
-    <form action="{{ url('/ingredient') }}" method="POST" class="w-1/2">
+    <form action="{{ url('/ingredient') }}" method="POST" class="md:w-1/2 w-full">
 
       @csrf
       <div class="shadow sm:rounded-md sm:overflow-hidden">
@@ -27,48 +27,63 @@
 
           <div>
             <label for="ingredient-price" class="block text-lg font-medium text-gray-700"> Price </label>
-            <div class="mt-1 row">
-              <input required type="number" name="harga_bahan" id="ingredient-price" class="col-6 shadow-sm @error('harga_bahan') is-invalid @enderror p-1 border focus:ring-indigo-500 focus:border-indigo-500 flex-1 block w-full rounded-md sm:text-lg border-gray-300" placeholder="20000">
+            <div class="mt-1 grid grid-cols-11 gap-2">
+              <input required type="number" name="harga_bahan" id="ingredient-price" class="col-span-5  shadow-sm @error('harga_bahan') is-invalid @enderror p-1 border focus:ring-indigo-500 focus:border-indigo-500 flex-1 block w-full rounded-md sm:text-lg border-gray-300" placeholder="20000">
               @error('harga_bahan')
                 <span class="invalid-feedback" role="alert">
                     <strong>{{ $message }}</strong>
                 </span>
               @enderror
-              <input type="text" value="/" disabled class="col-1 ">
+                <span class="flex justify-center text-lg col-span-1">/</span>
+                <select required name="priceunit" id="ingredient-priceunit" class="col-span-5 shadow-sm  p-1 border focus:ring-indigo-500 focus:border-indigo-500 flex-1 block w-full rounded-md sm:text-lg border-gray-300">
+                  {{-- <option value="" selected disabled>Select Unit</option> --}}
+                  <option value="Gram">Gram</option>
+                  <option value="Kilogram">Kilogram</option>
+                  <option value="Liter">Liter</option>
+                  <!-- Add more options as needed -->
+                </select>
             </div>
           </div>
   
           <div>
             <label for="ingredient-stock" class="block text-lg font-medium text-gray-700"> Stock </label>
-            <div class="mt-1">
-              <input required type="number" name="stock" id="ingredient-stock" class="shadow-sm @error('stock') is-invalid @enderror p-1 border focus:ring-indigo-500 focus:border-indigo-500 flex-1 block w-full rounded-md sm:text-lg border-gray-300" placeholder="100">
+            <div class="mt-1 grid grid-cols-2 gap-2">
+              <input required type="number" name="stock" id="ingredient-stock" class="col-span-1 shadow-sm @error('stock') is-invalid @enderror p-1 border focus:ring-indigo-500 focus:border-indigo-500 flex-1 block w-full rounded-md sm:text-lg border-gray-300" placeholder="100">
               @error('stock')
                 <span class="invalid-feedback" role="alert">
                     <strong>{{ $message }}</strong>
                 </span>
               @enderror
-            </div>
-          </div>
-  
-
-  
-          <div>
-            <label for="ingredient-unit" class="block text-lg font-medium text-gray-700"> Unit </label>
-            <div class="mt-1">
-              <select required name="unit" id="ingredient-unit" class="shadow-sm @error('unit') is-invalid @enderror p-1 border focus:ring-indigo-500 focus:border-indigo-500 flex-1 block w-full rounded-md sm:text-lg border-gray-300">
-                <option value="" selected disabled>Select Unit</option>
+              <select required name="unit" id="ingredient-unit" class="col-span-1 shadow-sm @error('unit') is-invalid @enderror p-1 border focus:ring-indigo-500 focus:border-indigo-500 flex-1 block w-full rounded-md sm:text-lg border-gray-300">
+                {{-- <option value="" selected disabled>Select Unit</option> --}}
                 <option value="Gram">Gram</option>
                 <option value="Kilogram">Kilogram</option>
                 <option value="Liter">Liter</option>
                 <!-- Add more options as needed -->
               </select>
-              @error('unit')
+
+            </div>
+          </div>
+  
+
+  
+          {{-- <div>
+            <label for="ingredient-unit" class="block text-lg font-medium text-gray-700"> Unit </label>
+            <div class="mt-1">
+              <select required name="unit" id="ingredient-unit" class="shadow-sm @error('unit') is-invalid @enderror p-1 border focus:ring-indigo-500 focus:border-indigo-500 flex-1 block w-full rounded-md sm:text-lg border-gray-300">
+                {{-- <option value="" selected disabled>Select Unit</option> --}}
+                {{-- <option value="Gram">Gram</option>
+                <option value="Kilogram">Kilogram</option>
+                <option value="Liter">Liter</option> --}}
+                <!-- Add more options as needed -->
+              {{-- </select>  --}}
+              {{-- @error('unit')
                 <span class="invalid-feedback" role="alert">
                     <strong>{{ $message }}</strong>
                 </span>
-              @enderror
-            </div>
-          </div>
+              @enderror --}}
+            {{-- </div>
+          </div> --}}
   
           <div class="px-4 py-3 text-right sm:px-6">
             <button type="submit" class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-lg font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Add</button>

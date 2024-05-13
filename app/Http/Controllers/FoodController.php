@@ -82,46 +82,52 @@ class FoodController extends Controller
     {
         $food = Food::findOrFail($id);
         $food->delete();
-        return redirect('/food/viewfood');
+        return redirect('food/viewfood')->with('error', 'Food deleted successfully!');
+        
     }
 
     public function create(Request $request)
     {
         $ingredients = Ingredient::all(); 
         return view('food.addfood', ['ingredients' => $ingredients]);
+        
     }
 
 
     public function store(Request $request)
-
     {
-         
+        // Define unit conversion rates
+        $unitConversion = [
+            'Gram' => 1,
+            'Kilogram' => 1000, // 1 kilogram = 1000 grams
+            'Liter' => 1, // 1 ounce = 28.3495 grams
+            // Add more unit conversions as needed
+       ];
+
     //    dd($request->all());
+
         // Validate incoming request
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
             'description' => 'required|string',
             'price' => 'required|numeric',
-            'picture' => 'required|image|max:2048', 
-            // 'ingredients.*.type' => 'required',
-            'ingredients.*.quantity' => 'required|numeric|min:1',
-            'ingredients.*.unit' => 'required|string|max:255',
-        ]);
-        
-   
+            'picture' => 'required',
+            'ingredients' => 'required|array',
+            'ingredients.*.type',
+            'ingredients.*.quantity',
+            'ingredients.*.unit' ,
+       ]);
+
         // Check if validation fails
         if ($validator->fails()) {
             return redirect()->back()
                 ->withErrors($validator) // Pass validation errors to the view
                 ->withInput(); // Pass the input data back to the form
-                
-                
         }
-       
-    
+
         // Upload the image
         $imagePath = $request->file('picture')->store('public/foods');
-    
+
         // Create food
         $food = Food::create([
             'name' => $request->name,
@@ -129,50 +135,84 @@ class FoodController extends Controller
             'price' => $request->price,
             'picture' => $imagePath,
         ]);
-        
-    
-        
-        // Attach ingredients to the food
+
+        // Attach ingredients to the food after converting quantities
         foreach ($request->ingredients as $ingredient) {
+            // Convert quantity to a common unit
+            $convertedQuantity = $ingredient['quantity'] * $unitConversion[$ingredient['unit']];
+
             FoodIngredient::create([
                 'food_id' => $food->id,
                 'ingredient_id' => $ingredient['type'],
-                'quantity' => $ingredient['quantity'],
-                'unit' => $ingredient['unit'],
+                'quantity' => $convertedQuantity,
+                'unit' => $ingredient['unit'], // Assuming you want to store in grams
             ]);
         }
-        // dd($food->fresh()->load('ingredients'));
-    
+
         // Redirect back or do whatever you want
         return redirect('food/viewfood')->with('success', 'Food created successfully!');
+    }
 
+    
+    public function edit( $id) {
+        $food = Food::findOrFail($id);
+        $ingredients = Ingredient::all();
+        return view('food.updatefood', ['food' => $food, 'ingredients' => $ingredients]);
     }
     
 
-    
-
-    public function update(Request $food, $id)
+    public function update(Request $request, $id)
     {
-        $food->validate([
-            'name' => [
-                'required',
-                 Rule::unique('food')->ignore($id),
-            ],
-            'description' => 'required',
-            'price' => 'required',
-            'type' => 'required',
-            'picture' => 'required'
+        $unitConversion = [
+            'Gram' => 1,
+            'Kilogram' => 1000, // 1 kilogram = 1000 grams
+            'Liter' => 1, // 1 ounce = 28.3495 grams
+            // Add more unit conversions as needed
+        ];
+        // Validate incoming request
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|string|max:255',
+            'description' => 'required|string',
+            'price' => 'required|numeric',
+            'picture' => 'required|image|max:2048',
+            // 'ingredients.*.type' => 'required|string',
+            'ingredients.*.quantity' => 'required|numeric|min:0',
+            'ingredients.*.unit' => 'required|string|max:255',
         ]);
-        Food::where('id', $id)->update([
-            'name' => $food['name'],
-            'description' => $food['description'],
-            'price' => $food['price'],
-            'type' => $food['type'],
-            'picture' => $food['picture'],
-        ]);
-        return redirect('/food/viewfood');
-    }
 
+        // Check if validation fails
+        if ($validator->fails()) {
+            return redirect()->back()
+                ->withErrors($validator) // Pass validation errors to the view
+                ->withInput(); // Pass the input data back to the form
+        }
+
+        // Update food
+        $food = Food::findOrFail($id);
+        $food->name = $request->name;
+        $food->description = $request->description;
+        $food->price = $request->price;
+        $food->picture = $request->file('picture') ? $request->file('picture')->store('public/foods') : $food->picture;
+        $food->save();
+
+        // Update ingredients
+        $foodIngredients = FoodIngredient::where('food_id', $id)->get();
+        FoodIngredient::where('food_id', $id)->delete(); // Delete all current ingredients before adding new ones
+        foreach ($request->ingredients as $ingredient) {
+            // Convert quantity to a common unit
+            $convertedQuantity = $ingredient['quantity'] * $unitConversion[$ingredient['unit']];
+            
+            FoodIngredient::create([
+                'food_id' => $food->id,
+                'ingredient_id' => $ingredient['type'],
+                'quantity' => $convertedQuantity,
+                'unit' => $ingredient['unit'], // Assuming you want to store in grams
+            ]);
+        }
+
+        // Redirect back or do whatever you want
+        return redirect('/food/viewfood')->with('success', 'Food updated successfully!');
+    }
     
     // public function showFoodCost($foodId)
     // {

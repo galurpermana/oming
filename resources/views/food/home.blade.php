@@ -34,20 +34,21 @@ if (session('cart') == null) {
             </div>
         </div> --}}
         <div class="flex flex-row space-x-4 flex-grow justify-end">
-            <span class="font-weight-bold sort-font my-auto"> Order By :</span>
-            <div class="py-1 px-3 border-solid border-1 border-slate-300 rounded-xl text-center bg-white">
-                <a href="{{url()->current().'?asc=true'}}" class="sort-font">Lowest</a>
+            <span class="font-semibold my-auto"> Order By :</span>
+            <div class="py-1 px-3 border border-gray-300 rounded-xl text-center bg-white">
+                <a href="{{ url()->current().'?asc=true' }}" class="text-gray-700 hover:text-gray-900">Lowest</a>
             </div>
-            <div class="py-1 px-3 border-solid border-1 border-slate-300 rounded-xl text-center bg-white">
-                <a href="{{url()->current().'?asc=false'}}" class="sort-font">Highest</a>
+            <div class="py-1 px-3 border border-gray-300 rounded-xl text-center bg-white">
+                <a href="{{ url()->current().'?asc=false' }}" class="text-gray-700 hover:text-gray-900">Highest</a>
             </div>
         </div>
+        
     </div>
 </div>
 
 <div class="p-10 grid grid-cols-1 sm:grid-cols-1 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-4 gap-5 ">
     @foreach($foods as $data)
-    <div class="rounded-md overflow-hidden shadow-md border-2 border-blue-200 hover:scale-105">
+    <div class="rounded-md overflow-hidden shadow-md md:col-span-2 lg:col-span-1 border-2 border-blue-200 hover:scale-105">
         <a href="../food/{{$data['id']}}">
             <img class="h-48 w-full object-cover" src="{{ Storage::url($data['picture'])}}" alt="Mountain">
             <div class="p-4">

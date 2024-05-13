@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Ingredient extends Model
 {
-    protected $fillable = ['name', 'stock', 'harga_bahan', 'unit'];
+    protected $fillable = ['name', 'stock', 'harga_bahan', 'unit', 'priceunit'];
 
     public function foods()
     {

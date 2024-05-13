@@ -40,7 +40,26 @@
                         <td class="border px-2 py-2">{{$loop->iteration}}</td>
                         <td class="border px-2 py-2">{{$igd['name']}}</td>
                         <td class="border px-2 py-2">{{$igd['stock']}} {{$igd['unit']}}</td>
-                        <td class="border px-2 py-2">{{$igd['harga_bahan']}}</td>
+                        <td class="border px-2 py-2">
+                            @php
+                                $harga_bahan = $igd->harga_bahan; // Assuming $igd is your model instance
+                                $priceunit = $igd->priceunit; // Assuming $ingredient is your model instance
+                        
+                                // Conversion logic based on selected unit
+                                switch ($priceunit) {
+                                    case 'Kilogram':
+                                        
+                                        $pricePerUnit = $harga_bahan * 1000; 
+                                        break;
+                                    case 'Liter':
+                                        $pricePerUnit = $harga_bahan * 1000; 
+                                        break;
+                                    // Add cases for other units as needed
+                                }
+                            @endphp
+                            {{ $pricePerUnit.'/'.$igd->priceunit }} {{-- Display the converted price --}}
+                        </td>
+                        
     
                         <td class="border px-2 py-2">
                             {{-- @can('update', $igd) --}}

@@ -52,7 +52,7 @@
                                     <!-- Modal header -->
                                     <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600 bg-gray-100 dark:bg-gray-700 dark:text-gray-400">
                                         <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
-                                            Cost Of Production
+                                            Cost Of Production {{$food['name']}}
                                         </h3>
                                         <button type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-hide="static-modal{{$food->id}}">
                                             <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
@@ -65,13 +65,13 @@
                                         <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
                                             <thead class="text-xs text-gray-700 uppercase bg-gray-100 dark:bg-gray-700 dark:text-gray-400">
                                                 <tr>
-                                                    <th scope="col" class="px-6 py-3 rounded-s-lg">
+                                                    <th scope="col" class="px-6 py-3 ">
                                                         Ingredients
                                                     </th>
                                                     <th scope="col" class="px-6 py-3">
                                                         Qty
                                                     </th>
-                                                    <th scope="col" class="px-6 py-3 rounded-e-lg">
+                                                    <th scope="col" class="px-6 py-3 ">
                                                         Price
                                                     </th>
                                                 </tr>
@@ -80,41 +80,41 @@
                                                 @php
                                                     $totalCost = 0;
                                                 @endphp
-    @foreach ($food->ingredients as $ingredient)
-    <tr class="bg-white dark:bg-gray-800">
-        <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-            @if ($ingredient)
-                {{ $ingredient->name }}
-            @else
-                Ingredient Not Found
-            @endif
-        </th>
-        <td class="px-6 py-4">
-            {{-- Assuming $ingredient->pivot->quantity is the pivot column --}}
-            {{ $ingredient->pivot->quantity}}
-        </td>
-        <td class="px-6 py-4">
-            {{-- Assuming $ingredient->harga_bahan is the price column --}}
-            @if ($ingredient)
-                {{ $ingredient->harga_bahan }}
-                @php
-                    $totalCost += $ingredient->pivot->quantity * $ingredient->harga_bahan;
-                    
-                @endphp
-            @else
-                Price Not Found
-            @endif
-        </td>
-    </tr>
-    @endforeach
+                                            @foreach ($food->ingredients as $ingredient)
+                                            <tr class="bg-white dark:bg-gray-800">
+                                                <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                                    @if ($ingredient)
+                                                        {{ $ingredient->name }}
+                                                    @else
+                                                        Ingredient Not Found
+                                                    @endif
+                                                </th>
+                                                <td class="px-6 py-4">
+                                                    {{-- Assuming $ingredient->pivot->quantity is the pivot column --}}
+                                                    {{ $ingredient->pivot->quantity}} {{$ingredient->unit}}
+                                                </td>
+                                                <td class="px-6 py-4">
+                                                    {{-- Assuming $ingredient->harga_bahan is the price column --}}
+                                                    @if ($ingredient)
+                                                        Rp.{{ $ingredient->harga_bahan }}
+                                                        @php
+                                                            $totalCost += $ingredient->pivot->quantity * $ingredient->harga_bahan;
+                                                            
+                                                        @endphp
+                                                    @else
+                                                        Price Not Found
+                                                    @endif
+                                                </td>
+                                            </tr>
+                                            @endforeach
     
                                                 
                                             </tbody>
-                                            <tfoot class="bg-gray-100 dark:bg-gray-700 dark:text-gray-400">
+                                            <tfoot class="bg-gray-100 dark:bg-gray-700 dark:text-gray-400 rounded-b">
                                                 <tr class="font-semibold text-gray-900 dark:text-white">
                                                     <th scope="row" class="px-6 py-3 text-base">Total</th>
-                                                    
-                                                    <td class="px-6 py-3">{{ $totalCost }}</td>
+                                                    <td></td>
+                                                    <td class="px-6 py-3">Rp. {{ $totalCost }}</td>
                                                 </tr>
                                             </tfoot>
                                         </table>
@@ -125,7 +125,7 @@
                         <td class="border px-2 py-2"><img class="h-20 w-full object-cover" src="{{ Storage::url($food['picture'])}}" alt="Mountain"></td>
                         <td class="border px-2 py-2">
                             @can('update', $food)
-                            <form action="/updatefood/{{$food['id']}}" method="GET">
+                            <form action="{{route('food.edit', ['food' => $food['id']])}}" method="GET">
                                 @csrf
                                 <button type="submit" class="text-sky-600">Edit</button>
                             </form>
