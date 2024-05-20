@@ -27,8 +27,9 @@ class Order extends Model
     protected $fillable = [
         'user_id',
         'date',
-        'type',
-        'deliveryAddress',
+        'image_path',
+        'status'
+        
     ];
 
     public function user() {
@@ -36,6 +37,6 @@ class Order extends Model
     }
 
     public function food() {
-        return $this->belongsToMany(Food::class)->withPivot('quantity'); 
+        return $this->belongsToMany(Food::class, 'food_order', 'order_id', 'food_id')->withPivot('quantity'); 
     }
 }

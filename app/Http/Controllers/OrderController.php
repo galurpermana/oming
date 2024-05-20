@@ -8,9 +8,16 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Log;
 
 class OrderController extends Controller
 {
+    public function adminIndex() {
+        $orders = Order::with(['user', 'food.ingredients'])->get();
+        return view('order_admin.orderlist', ['orders' => $orders]);
+    }
+
+
     public function create(Order $order)
     {
         $order->save();
@@ -99,7 +106,7 @@ class OrderController extends Controller
                 Session::flash('success', 'Successfully added to cart.');
             }
 
-            return '/home';
+            return '/';
         }
         else {
             Session::flash('info', 'You must be logged in to add to cart and place orders.');
@@ -147,21 +154,110 @@ class OrderController extends Controller
     }
 
     public function placeOrder(Request $req) {
+        // Validate the uploaded image
+        $req->validate([
+            'orderImage' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+        ]);
+    
+        // Handle the file upload
+        if ($req->hasFile('orderImage')) {
+            $image = $req->file('orderImage');
+            $imageName = time() . '.' . $image->getClientOriginalExtension();
+            $image->move(public_path('images/orders'), $imageName);
+        }
+    
+        // Create a new order
         $order = Order::create([
             'user_id' => Auth::id(),
             'date' => Carbon::now(),
-            'type' => $req->type,
-            'deliveryAddress' => $req->address,
+            'image_path' => 'images/orders/' . $imageName,
         ]);
-        
+    
+        // Get the cart items from the session
         $cart_arr = Session::pull('cart');  // pull: get the value and removes it from the session
-        foreach ($cart_arr as $key => $value) {
-            // $key = 0,1,2,...,n   $value = 'id','name','price',...
-            $food = Food::findOrFail($value['id']);
-            $order->food()->attach($food, ['quantity' => $value['quantity']]);  // attach each food in the cart to the newly created order
-        }
         
+    
+        // Check if the cart is empty
+        if (is_null($cart_arr) || empty($cart_arr)) {
+            Session::flash('error', 'Your cart is empty.');
+            return redirect('/cart');  // Redirect back to the cart or show an error page
+        }
+    
+        // Validate that all food IDs exist
+        $food_ids = array_column($cart_arr, 'id');
+        $valid_foods = Food::whereIn('id', $food_ids)->pluck('id')->toArray();
+    
+        foreach ($cart_arr as $item) {
+            if (in_array($item['id'], $valid_foods)) {
+                $order->food()->attach($item['id'], ['quantity' => $item['quantity']]);
+            } else {
+                // Handle the case where a food item is not valid
+                Session::flash('error', 'One or more food items in your cart are not available.');
+                return redirect('/cart');  // Redirect back to the cart or show an error page
+            }
+        }
+    
+        // Flash success message and redirect to orders page
         Session::flash('success', 'Successfully placed order.');
         return redirect('/order');
     }
+
+    public function updateStatus(Request $request)
+    {
+        // Validate the request to ensure order_id and status are correct
+        $request->validate([
+            'order_id' => 'required|exists:order,id',
+            'status' => 'required|string|in:pending,In Process,Rejected,Canceled,Completed',
+        ]);
+
+        // Retrieve the order with its related foods and ingredients
+        $order = Order::with('food.ingredients')->findOrFail($request->order_id);
+        $previousStatus = $order->status;
+        $order->status = $request->status;
+        $order->save();
+
+        // Log the order details for debugging
+        Log::info('Order details', ['order' => $order->toArray()]);
+
+        // Check if the status is changing to "In Process" from any other status
+        if ($previousStatus !== 'In Process' && $request->status === 'In Process') {
+            foreach ($order->food as $food) {
+                foreach ($food->ingredients as $ingredient) {
+                    $quantityUsed = $ingredient->pivot->quantity * $food->pivot->quantity;
+                    $ingredient->stock -= $quantityUsed;
+                    $ingredient->save();
+                    Log::info('Reduced stock for ingredient', [
+                        'ingredient_id' => $ingredient->id,
+                        'quantity_used' => $quantityUsed,
+                        'new_stock' => $ingredient->stock,
+                    ]);
+                }
+            }
+            
+        }
+
+        return redirect()->back()->with('success', 'Order status updated successfully.');
+    }
+
+    public function cancelOrder(Request $request, $orderId)
+    {
+        try {
+            // Retrieve the order
+            $order = Order::findOrFail($orderId);
+
+            // Update the status to "Canceled"
+            $order->status = 'Canceled';
+            $order->save();
+
+            // Optionally, you can perform additional actions here, such as sending notifications, logging, etc.
+
+            return redirect()->back()->with('success', 'Order canceled successfully.');
+        } catch (\Exception $e) {
+            // Log the error for debugging
+            Log::error('Error canceling order: ' . $e->getMessage());
+
+            return redirect()->back()->with('error', 'Failed to cancel order.');
+        }
+    }
+
 }

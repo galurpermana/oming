@@ -25,57 +25,100 @@ class IngredientsController extends Controller
             'stock' => 'required|numeric',
             'harga_bahan' => 'required|numeric',
             'unit' => 'required|string|max:255',
-            
+        ]);
+    
+        // Convert stock to grams
+        $stock = $request->stock;
+        $unit = $request->unit;
+    
+        switch ($unit) {
+            case 'Kilogram':
+                $stock *= 1000; // Convert kilograms to grams
+                break;
+            case 'Liter':
+                // Assuming 1 liter equals 1000 milliliters
+                $stock *= 1000; // Convert liters to milliliters
+                break;
+            // Add more cases for other units if needed
+        }
+    
+        // Store the converted stock in common unit (grams)
+        $request->merge([
+            'stock' => $stock,
         ]);
     
         // Calculate the price per common unit
         $price = $request->harga_bahan;
-        $unit = $request->priceunit;
-    
-        switch ($unit) {
-            case 'Kilogram':
-                // Convert price to per kilogram if unit is Gram
-                $pricePerUnit = $price / 1000; // 1 kilogram = 1000 grams
-                break;
-            case 'Liter':
-                // Convert price to per liter if unit is Liter
-                // Add conversion logic as needed for other units
-                break;
-            // Add cases for other units as needed
-        }
+        $pricePerUnit = $price / 1000;
     
         // Store the calculated price per common unit in harga_bahan
         $request->merge([
             'harga_bahan' => $pricePerUnit,
-            'priceunit' => $unit
         ]);
-        // dd($request);
     
+        // Create the ingredient
         Ingredient::create($request->all());
     
         return redirect()->route('ingredient.index')->with('success', 'Ingredient created successfully.');
     }
     
     
+    
 
-    public function edit(Ingredient $ingredient)
+    public function edit( $id)
     {
+        $ingredient = Ingredient::find($id); // Fetch the ingredient by ID
         return view('ingredient.edit', compact('ingredient'));
     }
 
-    public function update(Request $request, Ingredient $ingredient)
+    public function update(Request $request, $id)
     {
         $request->validate([
-            'name' => 'required|string|max:255|unique:ingredients,name,' . $ingredient->id,
+            'name' => 'required|string|max:255|unique:ingredients,name,' . $id,
             'stock' => 'required|numeric',
             'harga_bahan' => 'required|numeric',
             'unit' => 'required|string|max:255',
         ]);
-
+    
+        // Convert stock to grams or milliliters based on the unit
+        $stock = $request->stock;
+        $unit = $request->unit;
+    
+        switch ($unit) {
+            case 'Kilogram':
+                $stock *= 1000; // Convert kilograms to grams
+                break;
+            case 'Liter':
+                // Assuming 1 liter equals 1000 milliliters
+                $stock *= 1000; // Convert liters to milliliters
+                break;
+            // Add more cases for other units if needed
+        }
+    
+        // Store the converted stock in common unit (grams or milliliters)
+        $request->merge([
+            'stock' => $stock,
+        ]);
+    
+        // Calculate the price per common unit
+        $price = $request->harga_bahan;
+        $pricePerUnit = $price / 1000;
+    
+        // Store the calculated price per common unit in harga_bahan
+        $request->merge([
+            'harga_bahan' => $pricePerUnit,
+        ]);
+    
+        // Find the ingredient by ID
+        $ingredient = Ingredient::findOrFail($id);
+    
+        // Update the ingredient
         $ingredient->update($request->all());
-
+    
         return redirect()->route('ingredient.index')->with('success', 'Ingredient updated successfully.');
     }
+    
+    
 
     public function destroy(Ingredient $ingredient)
     {

@@ -107,7 +107,7 @@
         <div class="mt-3">
           <label for="picture" class="block text-lg font-medium text-gray-700"> Food Photo  </label>
           <div class="mt-1 flex flex-col rounded-md">
-              <input  type="file" name="picture" id="picture" class="block w-full text-sm  border  rounded-lg cursor-pointer  text-gray-400 focus:outline-none bg-gray-50 border-gray-600 placeholder-gray-400" placeholder="https://www.google.com/">
+              <input  type="file" accept="image/*" name="picture" id="picture" class="block w-full text-sm  border  rounded-lg cursor-pointer  text-gray-400 focus:outline-none bg-gray-50 border-gray-600 placeholder-gray-400" placeholder="https://www.google.com/">
               @error('picture')
               <span class="invalid-feedback" role="alert">
                   <strong>{{ $message }}</strong>
@@ -132,26 +132,33 @@
 function addIngredient() {
   var ingredientRow = document.querySelector('.ingredient-row').cloneNode(true);
 
-// Clear the values
-var selectElement = ingredientRow.querySelector('select');
-var inputElement = ingredientRow.querySelector('input[type="number"]');
-selectElement.selectedIndex = 0;
-inputElement.value = '';
+  // Clear the values
+  var selectElement = ingredientRow.querySelector('select');
+  var inputElement = ingredientRow.querySelector('input[type="number"]');
+  selectElement.selectedIndex = 0;
+  inputElement.value = '';
 
-// Append the cloned row to the ingredient section
-document.getElementById('ingredient-section').appendChild(ingredientRow);
+  // Append the cloned row to the ingredient section
+  document.getElementById('ingredient-section').appendChild(ingredientRow);
 
-// Update the name attribute of select and input fields with unique indices
-var ingredientRows = document.querySelectorAll('.ingredient-row');
-ingredientRows.forEach(function(row, index) {
-    var select = row.querySelector('select');
+  // Update the name attribute of select and input fields with unique indices
+  var ingredientRows = document.querySelectorAll('.ingredient-row');
+  ingredientRows.forEach(function(row, index) {
+    // var select = row.querySelector('select');
     var input = row.querySelector('input[type="number"]');
-    select.name = 'ingredients[' + index + '][type]';
+    // select.name = 'ingredients[' + index + '][type]';
     input.name = 'ingredients[' + index + '][quantity]';
-    // Update the name for the unit dropdown
-    var unitSelect = row.querySelector('select#ingredient-unit');
+
+    // Update the name for the type select dropdown within each ingredient row
+    var typeSelect = row.querySelector('select[name^="ingredients["][name$="[type]"]');
+    typeSelect.name = 'ingredients[' + index + '][type]';
+
+    // Update the name for the unit select dropdown within each ingredient row
+    var unitSelect = row.querySelector('select[name^="ingredients["][name$="[unit]"]');
     unitSelect.name = 'ingredients[' + index + '][unit]';
-});
+  });
+
+
 
 // Update the remove buttons state
 updateRemoveButtons();
@@ -175,7 +182,6 @@ function removeIngredient(button) {
     // Update the remove buttons state
     updateRemoveButtons();
   }
-
 
 
 

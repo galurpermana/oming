@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Validator;
+use App\Http\Requests\StoreFoodRequest;
 
 class FoodController extends Controller
 {
@@ -94,17 +95,16 @@ class FoodController extends Controller
     }
 
 
-    public function store(Request $request)
+    public function store(StoreFoodRequest $request)
     {
         // Define unit conversion rates
         $unitConversion = [
             'Gram' => 1,
-            'Kilogram' => 1000, // 1 kilogram = 1000 grams
-            'Liter' => 1, // 1 ounce = 28.3495 grams
-            // Add more unit conversions as needed
+            'Kilogram' => 1000, 
+            'Liter' => 1, 
+            
        ];
 
-    //    dd($request->all());
 
         // Validate incoming request
         $validator = Validator::make($request->all(), [
@@ -126,7 +126,8 @@ class FoodController extends Controller
         }
 
         // Upload the image
-        $imagePath = $request->file('picture')->store('public/foods');
+        $imagePath = $request->file('picture')->store('foods', 'public');
+
 
         // Create food
         $food = Food::create([
@@ -145,7 +146,7 @@ class FoodController extends Controller
                 'food_id' => $food->id,
                 'ingredient_id' => $ingredient['type'],
                 'quantity' => $convertedQuantity,
-                'unit' => $ingredient['unit'], // Assuming you want to store in grams
+                'unit' => $ingredient['unit'], 
             ]);
         }
 
@@ -165,20 +166,20 @@ class FoodController extends Controller
     {
         $unitConversion = [
             'Gram' => 1,
-            'Kilogram' => 1000, // 1 kilogram = 1000 grams
-            'Liter' => 1, // 1 ounce = 28.3495 grams
-            // Add more unit conversions as needed
+            'Kilogram' => 1000, 
+            'Liter' => 1, 
         ];
         // Validate incoming request
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
             'description' => 'required|string',
             'price' => 'required|numeric',
-            'picture' => 'required|image|max:2048',
-            // 'ingredients.*.type' => 'required|string',
+            'picture' => 'image|max:2048',
+            'ingredients.*.type' ,
             'ingredients.*.quantity' => 'required|numeric|min:0',
             'ingredients.*.unit' => 'required|string|max:255',
         ]);
+        // dd($request->all());
 
         // Check if validation fails
         if ($validator->fails()) {
@@ -206,7 +207,7 @@ class FoodController extends Controller
                 'food_id' => $food->id,
                 'ingredient_id' => $ingredient['type'],
                 'quantity' => $convertedQuantity,
-                'unit' => $ingredient['unit'], // Assuming you want to store in grams
+                'unit' => $ingredient['unit'], 
             ]);
         }
 

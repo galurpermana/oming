@@ -39,16 +39,34 @@
                     <tr>
                         <td class="border px-2 py-2">{{$loop->iteration}}</td>
                         <td class="border px-2 py-2">{{$igd['name']}}</td>
-                        <td class="border px-2 py-2">{{$igd['stock']}} {{$igd['unit']}}</td>
+                        <td class="border px-2 py-2">
+                            @php
+                                $stock = $igd['stock'];
+                                $unit = $igd['unit'];
+                        
+                                switch ($unit) {
+                                    case 'Kilogram':
+                                        $stock /= 1000; // Convert grams to kilograms
+                                        break;
+                                    case 'Liter':
+                                        $stock /= 1000; // Convert milliliters to liters
+                                        break;
+                                    // Add more cases for other units if needed
+                                }
+                            @endphp
+                            {{ $stock }} {{ $unit }}
+                        </td>
                         <td class="border px-2 py-2">
                             @php
                                 $harga_bahan = $igd->harga_bahan; // Assuming $igd is your model instance
                                 $priceunit = $igd->priceunit; // Assuming $ingredient is your model instance
-                        
+
+                                // Initialize $pricePerUnit variable
+                                $pricePerUnit = null;
+
                                 // Conversion logic based on selected unit
                                 switch ($priceunit) {
                                     case 'Kilogram':
-                                        
                                         $pricePerUnit = $harga_bahan * 1000; 
                                         break;
                                     case 'Liter':
@@ -57,7 +75,12 @@
                                     // Add cases for other units as needed
                                 }
                             @endphp
-                            {{ $pricePerUnit.'/'.$igd->priceunit }} {{-- Display the converted price --}}
+                            @if (!is_null($pricePerUnit))
+                                {{ $pricePerUnit.'/'.$igd->priceunit }}
+                            @else
+                                <!-- Handle the case where $pricePerUnit is not calculated -->
+                            @endif
+ {{-- Display the converted price --}}
                         </td>
                         
     

@@ -11,6 +11,8 @@
                 <h1 class="font-semibold font-sans text-lg text-red-500 leading-8">Rp {{ $food['price'] }}</h1>
                 <h1 class="font-serif text-sm text-gray-600 leading-7">{{ $food['description'] }}</h1>
             </div>
+            @cannot('isAdmin')
+                
             <div class="pt-3 flex flex-col flex-grow justify-around">
                 <div>
                     <h1 class="font-sans text-sm text-gray-900 leading-8">Quantity</h1>
@@ -22,6 +24,8 @@
                 </div>
                 <button id='addCartBtn' class="p-2 mt-4 bg-blue-600 hover:text-blue-600 text-neutral-50 rounded-md hover:bg-white border-2 border-blue-600 disabled:text-slate-500 disabled:bg-slate-200">Add to Cart</button>
             </div>
+            @endcannot
+
         </div>
     </div>
 </div>

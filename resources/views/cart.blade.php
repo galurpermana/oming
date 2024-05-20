@@ -116,34 +116,48 @@ if (!empty(session('cart'))) {
         <div class="bg-white rounded shadow-lg border flex flex-col overflow-hidden">
             <button class="closeOrderModal fill-current h-6 w-6 absolute right-0 top-0 m-6 font-3xl font-bold">&times;</button>
             <div class="px-6 py-3 text-xl border-b font-bold">Place Order</div>
-            <form method="POST" action="/cart/placeorder" class="px-4 pt-2 pb-4" name="place-order-form" id="place-order-form">
+            <form method="POST" action="/cart/placeorder" enctype="multipart/form-data" class="px-4 pt-2 pb-4" name="place-order-form" id="place-order-form">
                 @csrf
                 <div class="p-6 flex-grow">
                     <div class="mb-4">
-                        <label class="block text-gray-700 text-sm font-bold mb-2" for="type">
-                            Order Type:
+                        
+                        <label class="block text-gray-700 text-sm font-bold mb-2" for="orderImage">
+                            Transfer sebesar Rp {{number_format((float)($total), 2, '.', '')}} ke rekening berikut:
                         </label>
-                        <div class="columns-2 gap-2 w-fit">
-                            <div><label> <input type="radio" name="type" id="pickupType" value="pickup" onclick="showAddressField()" checked> Pickup </label></div>
-                            <div><label> <input type="radio" name="type" id="deliveryType" value="delivery" onclick="showAddressField()"> Delivery </label></div>
+                        <div class="w-full mb-4">
+                            <div class="relative">
+                                <label for="npm-install-copy-text" class="sr-only">Label</label>
+                                <input id="npm-install-copy-text" type="text" class="col-span-6 bg-gray-50 border border-gray-300 text-black text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full px-2.5 py-4 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500" value="xxxxxxxxxxxxx" disabled readonly>
+                                <button data-copy-to-clipboard-target="npm-install-copy-text" class="absolute end-2.5 top-1/2 -translate-y-1/2 text-gray-900 dark:text-gray-400 hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-600 dark:hover:bg-gray-700 rounded-lg py-2 px-2.5 inline-flex items-center justify-center bg-white border-gray-200 border">
+                                    <span id="default-message" class="inline-flex items-center">
+                                        <svg class="w-3 h-3 me-1.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 18 20">
+                                            <path d="M16 1h-3.278A1.992 1.992 0 0 0 11 0H7a1.993 1.993 0 0 0-1.722 1H2a2 2 0 0 0-2 2v15a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V3a2 2 0 0 0-2-2Zm-3 14H5a1 1 0 0 1 0-2h8a1 1 0 0 1 0 2Zm0-4H5a1 1 0 0 1 0-2h8a1 1 0 1 1 0 2Zm0-5H5a1 1 0 0 1 0-2h2V2h4v2h2a1 1 0 1 1 0 2Z"/>
+                                        </svg>
+                                        <span class="text-xs font-semibold">Copy</span>
+                                    </span>
+                                    <span id="success-message" class="hidden inline-flex items-center">
+                                        <svg class="w-3 h-3 text-blue-700 dark:text-blue-500 me-1.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 16 12">
+                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5.917 5.724 10.5 15 1.5"/>
+                                        </svg>
+                                        <span class="text-xs font-semibold text-blue-700 dark:text-blue-500">Copied</span>   
+                                    </span>
+                                </button>
+                            </div>
                         </div>
-                    </div>
-                    <div class="hidden" id="address_div">
-                        <label class="block text-gray-700 text-sm font-bold mb-2" for="address">
-                            Address:
+
+                        <label class="block text-gray-700 text-sm font-bold mb-2" for="orderImage">
+                            Upload Bukti Transfer:
                         </label>
-                        @if(Auth::user())
-                        <textarea rows="3" class="resize-none shadow-sm appearance-none border border-red-500 rounded w-full py-2 px-3 text-gray-700 mb-1 leading-tight focus:outline-none focus:shadow-outline" id="address" name="address">{{Auth::user() -> address}}</textarea>
-                        @endif
-                        <span class="">
-                            <p id="addresserr" class="text-red-600"></p>
-                        </span>
+                        <input accept="image/*" required type="file" name="orderImage" id="orderImage" class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50" onchange="previewImage(event)">
+                        <div class="mb-4">
+                            <img id="imagePreview" src="#" alt="Image Preview" class="hidden w-full h-auto border border-gray-300 rounded-lg mt-2">
+                        </div>
                     </div>
                 </div>
                 <div class="px-6 pt-3 border-t">
                     <div class="flex justify-end">
-                        <button type="button" class="closeOrderModal bg-gray-700 text-gray-100 rounded px-4 py-2 mr-1">Close</Button>
-                        <button type="button" class="openPaymentModal bg-green-600 text-white rounded px-4 py-2">Proceed to Payment</Button>
+                        <button type="button" class="closeOrderModal bg-gray-700 text-gray-100 rounded px-4 py-2 mr-1">Close</button>
+                        <button type="submit" class="bg-green-600 text-white rounded px-4 py-2">Confirm</button>
                     </div>
                 </div>
             </form>
@@ -293,6 +307,20 @@ if (!empty(session('cart'))) {
     function setAddress() {
 
         document.getElementById('address').defaultValue = 'abc';
+    }
+
+    function previewImage(event) {
+        var input = event.target;
+        var reader = new FileReader();
+
+        reader.onload = function(){
+            var dataURL = reader.result;
+            var imagePreview = document.getElementById('imagePreview');
+            imagePreview.src = dataURL;
+            imagePreview.classList.remove('hidden');
+        };
+
+        reader.readAsDataURL(input.files[0]);
     }
 </script>
 @endsection

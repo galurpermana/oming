@@ -13,13 +13,15 @@ class FoodOrder extends Migration
      */
     public function up()
     {
+        Schema::dropIfExists('food_order');
         Schema::create('food_order', function (Blueprint $table) {
             $table->unsignedBigInteger('order_id');
             $table->unsignedBigInteger('food_id');
             $table->unsignedBigInteger('quantity');
             $table->foreign('order_id')->references('id')->on('order')->onDelete('cascade');
-            $table->foreign('food_id')->references('id')->on('food')->onDelete('cascade');
+            $table->foreign('food_id')->references('id')->on('foods')->onDelete('cascade');
         });
+        
     }
 
     /**

@@ -28,12 +28,12 @@ class Food extends Model
     protected $fillable = ['name', 'description', 'price', 'picture'];
 
     public function orders() {
-        return $this->belongsToMany(Order::class)->withPivot('quantity');
+        return $this->belongsToMany(Order::class, 'food_order', 'food_id', 'order_id')->withPivot('quantity');
     }
 
     public function ingredients()
     {
         return $this->belongsToMany(Ingredient::class, 'food_ingredients', 'food_id', 'ingredient_id')
-                    ->withPivot('quantity');
+                    ->withPivot('quantity','unit');
     }
 }

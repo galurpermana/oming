@@ -91,12 +91,26 @@
                                                 </th>
                                                 <td class="px-6 py-4">
                                                     {{-- Assuming $ingredient->pivot->quantity is the pivot column --}}
-                                                    {{ $ingredient->pivot->quantity}} {{$ingredient->unit}}
+                                                    @php
+                                                    $quantity = $ingredient->pivot->quantity;
+                                                    $unit = $ingredient->pivot->unit;
+                                            
+                                                    switch ($unit) {
+                                                        case 'Kilogram':
+                                                            $quantity /= 1000; // Convert grams to kilograms
+                                                            break;
+                                                        case 'Liter':
+                                                            $quantity /= 1000; // Convert milliliters to liters
+                                                            break;
+                                                        // Add more cases for other units if needed
+                                                    }
+                                                @endphp
+                                                {{ $quantity }} {{ $unit }}
                                                 </td>
                                                 <td class="px-6 py-4">
                                                     {{-- Assuming $ingredient->harga_bahan is the price column --}}
                                                     @if ($ingredient)
-                                                        Rp.{{ $ingredient->harga_bahan }}
+                                                        Rp.{{$ingredient->pivot->quantity * $ingredient->harga_bahan }}
                                                         @php
                                                             $totalCost += $ingredient->pivot->quantity * $ingredient->harga_bahan;
                                                             

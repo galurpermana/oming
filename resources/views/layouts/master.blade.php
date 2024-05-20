@@ -85,8 +85,17 @@
                 </li>
                 </ul>
                 <div class="py-2">
-                <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Sign out</a>
+                {{-- <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Sign out</a> --}}
+                    {{-- <a href=""  class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white" >Sign out</a> --}}
+                    <a href="#" onclick="showLogoutModal(event)" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Sign out</a>
+                    
+                    {{-- <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white" onclick="showLogoutModal(event)">Sign out</a>
+                    <form id="frm-logout" action="{{ route('logout') }}" method="POST" style="display: none;">
+                        {{ csrf_field() }}
+                    </form> --}}
+                    
                 </div>
+
             </div>
             
                 @endguest
@@ -97,6 +106,7 @@
                         <li class="grid  align-items-center">
                             <a href="{{ url('/') }}" class="{{ Request::is('/') ? 'text-blue-600' : '' }} block py-2 px-3  rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 md:dark:hover:text-blue-500 dark:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700" aria-current="page"><i class="fa-solid fa-house"></i> Home</a>
                         </li>
+                        @cannot('isAdmin')
                         <li >
                             <a href="{{ url('order') }}" class="{{ Request::is('order') ? 'text-blue-600' : '' }} block py-2 px-3  rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 md:dark:hover:text-blue-500 dark:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700"><i class="fa-solid fa-clipboard-list"></i> Order</a>
                         </li>
@@ -104,6 +114,7 @@
                             <a href="{{ url('cart') }}" class="{{ Request::is('cart') ? 'text-blue-600' : '' }} block py-2 px-3  rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 md:dark:hover:text-blue-500 dark:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700"><i class="fa-solid fa-cart-shopping"></i> Cart</a>
                         </li>
                         <li>
+                        @endcannot
                             @can('isAdmin')
                             <li >
                                 {{-- <a class="nav-link" href="{{ url('food/viewfood') }}">
@@ -133,7 +144,7 @@
                                         <a href="{{ url('food/viewfood') }}" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Menu</a>
                                     </li>
                                     <li>
-                                        <a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Order List</a>
+                                        <a href="{{ url('order/orders_list') }}" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Order List</a>
                                     </li>
                                     <li>
                                         <a href="{{ url('ingredient/ingredientslist') }}" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">ingredients list</a>
@@ -141,10 +152,7 @@
                                     </ul>
                                     
                                     <div class="py-2">
-                                    <a href="{{route('logout')}}"  class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Sign out</a>
-                                    <form id="frm-logout" action="{{ route('logout') }}" method="POST" style="display: none;">
-                                        {{ csrf_field() }}
-                                    </form>
+
                                     </div>
                                 </div>
                                 
@@ -174,9 +182,43 @@
     
 
     @stack('script')
+    <div id="popup-modal" tabindex="-1" class="hidden fixed inset-0 z-50 overflow-auto bg-gray-500 bg-opacity-75">
+        <div class="flex items-center justify-center min-h-screen">
+            <div class="relative bg-white rounded-lg shadow-md w-96">
+                <button type="button" onclick="hideLogoutModal()" class="absolute top-0 right-0 mt-3 mr-3 text-gray-500 hover:text-gray-700">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                </button>
+                <div class="p-6">
+                    <div class="text-center">
+                        <h3 class="text-lg font-medium text-gray-900">Are you sure you want to sign out?</h3>
+                    </div>
+                    <div class="mt-6 flex justify-center">
+                        <button onclick="logout()" type="button" class="mr-2 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700">Yes, I'm sure</button>
+                        <button onclick="hideLogoutModal()" type="button" class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300">No, cancel</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
 </body>
 </html>
 <script src="https://kit.fontawesome.com/56c2e8bc64.js" crossorigin="anonymous"></script>
 <script>
+    function showLogoutModal(event) {
+        event.preventDefault();
+        var modal = document.getElementById('popup-modal');
+        modal.classList.remove('hidden');
+    }
 
+    function hideLogoutModal() {
+        var modal = document.getElementById('popup-modal');
+        modal.classList.add('hidden');
+    }
+
+    function logout() {
+        window.location.href = "{{ route('logout') }}";
+    }
 </script>

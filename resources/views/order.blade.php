@@ -1,14 +1,17 @@
 @extends('layouts.master')
 
 @section('content')
-<h1 class="px-4 pt-1 pb-3 text-3xl font-bold">
-    <div class="flex flex-row flex-1">
-        <span class="mr-5 self-center"> My Order History </span>
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 self-center" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
-        </svg>
-    </div>
-</h1>
+<div class="flex flex-row">
+    <h1 class="px-4 pt-1 pb-3 text-3xl font-bold">
+        <div class="flex flex-row flex-1">
+            <span class="mr-5 self-center"> My Order History </span>
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 self-center" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
+            </svg>
+        </div>
+    </h1>
+    
+</div>
 
 {{-- Orders --}}
 {{-- Check if user is logged in --}}
@@ -16,33 +19,78 @@
     {{-- Check if user has any orders --}}
     @if (count($orders) != 0)
         @foreach ($orders as $order)
-            <div class="px-3 py-2">
+            <div class="p-2">
                 <div class="flex flex-row p-4 leading-normal border shadow-md hover:bg-gray-100">
-                    <div class="p-2 w-1/5">
-                        <p class="mb-1"> Order ID: <span class="font-semibold"> {{$order->id}} </span> </p>
-                        <p class="mb-1"> Date: <span class="font-semibold"> {{date_format(date_create($order->date), 'jS F Y')}} </span> </p>
-                        <p class="mb-1"> Type: <span class="font-semibold capitalize"> {{$order->type}} </span> </p>
-                        <p class="mb-1"> Total: <span class="font-semibold capitalize"> RM{{number_format((float)$order->total, 2, '.', '')}} </span> </p>
-                        {{-- flex justify-center leading-normal w-1/6 --}}
-                        <div class="mt-2">
-                            <button onclick="remove_form_action({{$order->id}})" type="button" class="openRemoveModal text-red-700 font-semibold bg-inherit border-red-500 rounded hover:text-white hover:bg-red-500 hover:border-transparent py-1 px-3 border-2">
-                                <span> Delete Order </span>
-                            </button>
-                        </div>
-                    </div>
-                    <div class="w-4/5">
+                    
+                    <div class="w-full">
                         <div class="flex flex-col justify-between">
                             @foreach ($order->food as $food)
                             <input type="hidden" id="order_id" value={{$order->id}} />
                             <input type="hidden" id="food_id" value={{$food->id}} />
                             <div class="flex flex-col items-center -white rounded-lg border shadow-md md:flex-row md:max-w-full hover:bg-gray-100">
                                 <div class="flex rounded-lg">
-                                    <img class="flex h-28 w-44 object-fill rounded-lg" src="{{ Storage::url($food['picture'])}}" alt="">
+                                    <img class="flex h-28  object-fill rounded-lg" src="{{ Storage::url($food['picture'])}}" alt="">
                                 </div>
-                                <div class="flex flex-col place-content-center px-4 py-3 leading-normal w-4/6">
-                                    <h5 class="flex mb-2 text-2xl font-bold tracking-tight text-gray-900"> {{$food->name}} </h5>
-                                    <p class="flex font-normal text-gray-700"> Quantity: <b>&nbsp;{{$food->pivot->quantity}}</b> </p>
-                                    <p class="flex font-normal text-gray-700"> Price: <b>&nbsp;RM{{number_format((float)($food->price*$food->pivot->quantity), 2, '.', '')}} &ensp;</b> <span class="opacity-60"> [RM{{number_format((float)($food->price), 2, '.', '')}} per unit] <span> </p>
+                                <div class="flex flex-col w-full md:flex-row  px-4 py-3 leading-normal ">
+                                    <div class="basis-1/2">
+                                        <h5 class="flex mb-2 text-2xl font-bold tracking-tight text-gray-900"> {{$food->name}} </h5>
+                                        <p class="flex font-normal text-gray-700"> Quantity: <b>&nbsp;{{$food->pivot->quantity}}</b> </p>
+                                        <p class="flex font-normal text-gray-700"> Price: <b>&nbsp;Rp. {{number_format((float)($food->price*$food->pivot->quantity), 2, '.', '')}} &ensp;</b> <span class="opacity-60"> [Rp. {{number_format((float)($food->price), 2, '.', '')}} per unit] <span> </p>
+                                        <p class="mb-1"> Order ID: <span class="font-semibold"> {{$order->id}} </span> </p>
+                                        <p class="mb-1"> Date: <span class="font-semibold"> {{date_format(date_create($order->date), 'jS F Y')}} </span> </p>
+                                        {{-- <p class="mb-1"> Type: <span class="font-semibold capitalize"> {{$order->type}} </span> </p> --}}
+                                        <p class="mb-1"> Total: <span class="font-semibold capitalize"> Rp. {{number_format((float)$order->total, 2, '.', '')}} </span> </p>
+                                    </div>
+
+                                    <div class="flex flex-col justify-center items-center min-w p-2 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700">
+                                        @php
+                                            $statusIcon = '';
+                                            $statusColor = '';
+                                            switch ($order->status) {
+                                                case 'pending':
+                                                    $statusIcon = 'fa-solid fa-clock';
+                                                    $statusColor = 'text-gray-900 dark:text-white';
+                                                    break;
+                                                case 'In Process':
+                                                    $statusIcon = 'fa-solid fa-hourglass-half';
+                                                    $statusColor = 'text-yellow-500';
+                                                    break;
+                                                case 'Rejected':
+                                                    $statusIcon = 'fa-solid fa-xmark';
+                                                    $statusColor = 'text-red-500';
+                                                    break;
+                                                case 'Canceled':
+                                                    $statusIcon = 'fa-solid fa-ban';
+                                                    $statusColor = 'text-red-500';
+                                                    break;
+                                                case 'Completed':
+                                                    $statusIcon = 'fa-solid fa-check-circle';
+                                                    $statusColor = 'text-green-500';
+                                                    break;
+                                                default:
+                                                    $statusIcon = '';
+                                                    $statusColor = '';
+                                                    break;
+                                            }
+                                        @endphp
+                                        <div><i class="{{ $statusIcon }} fa-2xl w-full"></i></div>
+                                        <h5 class="mb-2 text-2xl font-bold {{ $statusColor }}">{{ $order->status }}</h5>
+                                    </div>
+                                    
+                                        
+                                    
+                                    {{-- flex justify-center leading-normal w-1/6 --}}
+                                    
+                                    
+                                </div>
+                                <div class="p-2 ">
+                                    @if($order->status == 'pending')
+                                    <div class="mt-2">
+                                        <button type="button" class="openRemoveModal text-red-700 font-semibold bg-inherit border-red-500 rounded hover:text-white hover:bg-red-500 hover:border-transparent py-1 px-3 border-2">
+                                            <span> Cancel </span>
+                                        </button>
+                                    </div>
+                                    @endif
                                 </div>
                             </div>
                             <div class="p-1"></div>
@@ -71,17 +119,16 @@
                                 </svg>
                             </div>
                             <div class="pl-1 sm:mt-0 sm:ml-4 sm:text-left">
-                                <h3 class="text-lg leading-6 font-medium text-gray-900" id="modal-title">Are you sure you want to delete this order from your order history?</h3>
+                                <h3 class="text-lg leading-6 font-medium text-gray-900" id="modal-title">Are you sure you want to cancel this order?</h3>
                                 {{-- <div class="mt-2">
                                                 <p class="text-sm text-gray-500">Are you sure you want to deactivate your account? All of your data will be permanently removed. This action cannot be undone.</p>
                                             </div> --}}
                             </div>
                         </div>
-                    </div>
+                    </div>            
                     <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
-                        <form name="remove_form" id="remove_form" method="POST">
+                        <form id="cancel-order-form" action="{{ route('order.cancel', $order->id) }}" method="POST">
                             @csrf
-                            @method('delete')
                             <button type="submit" class="closeRemoveModal w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-600 text-base font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:ml-3 sm:w-auto sm:text-sm"> Confirm </button>
                         </form>
                         <button type="button" class="closeRemoveModal w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-inherit text-base font-medium text-gray-700 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:ml-3 sm:w-auto sm:text-sm"> Cancel </button>

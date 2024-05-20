@@ -58,5 +58,9 @@ Route::get('/ingredient/{ingredient}/edit', [IngredientsController::class, 'edit
 Route::put('/ingredient/{ingredient}', [IngredientsController::class, 'update'])->name('ingredients.update');
 Route::delete('/ingredient/{ingredient}', [IngredientsController::class, 'destroy'])->name('ingredients.destroy');
 
+Route::get('order/orders_list', [OrderController::class, 'adminIndex'])->name('orders_list.adminindex');
+Route::post('/order/update-status', [OrderController::class, 'updateStatus'])->name('order.updateStatus');
+Route::post('/order/{orderId}/cancel', [OrderController::class, 'cancelOrder'])->name('order.cancel');
+
 
 

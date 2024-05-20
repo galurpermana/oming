@@ -113,7 +113,7 @@
                       </select>
                   </div>
                   <div class="md:col-span-3 lg:col-span-2 md:flex sm:flex-col">
-                      <input type="number" name="ingredients[{{ $index }}][quantity]" placeholder="amount" class="mt-1 flex-none shadow-sm  p-1 border focus:ring-indigo-500 focus:border-indigo-500 flex-1 block w-full rounded-md sm:text-lg border-gray-300">
+                      <input required type="number" name="ingredients[{{ $index }}][quantity]" placeholder="amount" class="mt-1 flex-none shadow-sm  p-1 border focus:ring-indigo-500 focus:border-indigo-500 flex-1 block w-full rounded-md sm:text-lg border-gray-300">
                   </div>
                   <div class="md:col-span-3 lg:col-span-2 md:flex sm:flex-col sm:col-span-1">
                       <select required name="ingredients[{{ $index }}][unit]" id="ingredient-unit_{{ $index }}" class="mt-1 shadow-sm @error('unit') is-invalid @enderror p-1 border focus:ring-indigo-500 focus:border-indigo-500 flex-1 block w-full rounded-md sm:text-lg border-gray-300">
@@ -149,7 +149,7 @@
         <div class="mt-3">
           <label for="picture" class="block text-lg font-medium text-gray-700"> Food Photo  </label>
           <div class="mt-1 flex flex-col rounded-md">
-              <input required type="file" name="picture" id="picture" class="block w-full text-sm  border  rounded-lg cursor-pointer  text-gray-400 focus:outline-none bg-gray-50 border-gray-600 placeholder-gray-400" placeholder="https://www.google.com/">
+              <input required accept="image/*" type="file" name="picture" id="picture" class="block w-full text-sm  border  rounded-lg cursor-pointer  text-gray-400 focus:outline-none bg-gray-50 border-gray-600 placeholder-gray-400" placeholder="https://www.google.com/">
               @error('picture')
               <span class="invalid-feedback" role="alert">
                   <strong>{{ $message }}</strong>

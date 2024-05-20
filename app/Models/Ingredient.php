@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Ingredient extends Model
 {
+    use HasFactory;
     protected $fillable = ['name', 'stock', 'harga_bahan', 'unit', 'priceunit'];
 
     public function foods()
